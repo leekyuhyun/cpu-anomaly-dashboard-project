@@ -1,0 +1,22 @@
+# Python / FastAPI (Backend)
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+*.env
+*.env.local
+.env.*.local
+
+# Node.js / React (Frontend)
+node_modules/
+build/
+dist/
+.npm
+npm-debug.log*
+yarn-error.log
+package-lock.json
+
+# OS specific
+.DS_Store
+Thumbs.db
