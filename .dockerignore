@@ -1,0 +1,12 @@
+# Git
+.git
+.gitignore
+
+# Node (이미 Dockerfile에서 설치함)
+frontend/node_modules
+frontend/build
+
+# Python (이미 Dockerfile에서 설치함)
+backend/venv
+backend/.venv
+backend/__pycache__

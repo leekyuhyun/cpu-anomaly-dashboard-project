@@ -9,39 +9,37 @@
 
 * **Backend:** Python, FastAPI
 * **Frontend:** React (JavaScript)
+* **Database:** PostgreSQL (via Docker)
+* **Orchestration:** Docker Compose
 * **ML Model:** Scikit-learn (Isolation Forest 등)
 
 ---
 
-## 🚀 실행 방법 (Local)
+## 🚀 실행 방법 (Docker)
 
-### 1. Backend
+이 프로젝트는 Docker Compose를 사용하여 모든 서비스(DB, Backend, Frontend)를 한 번에 실행합니다.
 
-```bash
-# /backend 폴더로 이동
-cd backend
+1.  **프로젝트 실행 (백그라운드)**
+    ```bash
+    # 프로젝트 최상위 폴더에서 실행
+    make up
+    ```
+    * `db`, `backend`, `frontend` 3개의 컨테이너가 모두 빌드되고 실행됩니다.
 
-# (가상환경 활성화)
-# source venv/bin/activate 
+2.  **서비스 접속**
+    * **Frontend (React App):** `http://localhost:3000`
+    * **Backend (FastAPI Docs):** `http://localhost:8000/docs`
 
-# FastAPI 서버 실행
-uvicorn main:app --reload
-```
+3.  **프로젝트 종료 (모든 컨테이너 중지 및 삭제)**
+    ```bash
+    make down
+    ```
 
-### 2. Frontend
-```bash
-# /frontend 폴더로 이동
-cd frontend
-
-# React 앱 실행
-npm start
-```
+---
 
 ## 🌿 브랜치 전략 (Branch Strategy)
-- main: 최종 배포 버전
 
-- develop: main 브랜치로 병합(Merge) 전, 통합 테스트를 진행하는 브랜치
-
-- frontend: 프론트엔드 기능 개발 브랜치. (frontend/ 폴더만 수정)
-
-- backend: 백엔드 기능 개발 브랜치. (backend/ 폴더만 수정)
+* **`main`**: 최종 배포 버전
+* **`develop`**: `main` 브랜치로 병합(Merge) 전, 통합 테스트를 진행하는 브랜치
+* **`frontend`**: 프론트엔드 기능 개발 브랜치. (`frontend/` 폴더만 수정)
+* **`backend`**: 백엔드 기능 개발 브랜치. (`backend/` 폴더만 수정)
