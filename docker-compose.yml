@@ -1,55 +1,55 @@
 version: "3.8"
 
 services:
-  # 1. 데이터베이스 서비스 (PostgreSQL)
   db:
-    image: postgres:15-alpine # PostgreSQL 15 이미지 사용
+    image: postgres:15-alpine
     container_name: cpu-dashboard-db
     environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=cpudb
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql/data # DB 데이터를 내 노트북에 저장
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432" # 내 노트북 5432 포트와 연결
+      - "5432:5432"
     restart: unless-stopped
 
-  # 2. 백엔드 서비스 (FastAPI)
   backend:
-    build: ./backend # ./backend/Dockerfile을 사용해 빌드
+    build: ./backend
     container_name: cpu-dashboard-backend
-    # [변경 1] uvicorn이 8800 포트에서 실행되도록 --port 변경
-    command: uvicorn main:app --host 0.0.0.0 --port 8800 --reload
+    # app/main.py 실행, /backend/app 폴더 감시
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8800 --reload --reload-dir /backend/app
     volumes:
-      - ./backend:/app # 내 노트북의 ./backend 폴더를 컨테이너의 /app에 연결
+      # 로컬 ./backend -> 컨테이너 /backend 연결
+      - ./backend:/backend
     ports:
-      # [변경 2] 내 노트북 8800번 <-> 컨테이너 8800번
-      - "8800:8800"
+      - "${HOST_BACKEND_PORT}:8800"
     environment:
-      # FastAPI가 이 주소로 DB에 접속하게 됩니다.
-      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/cpudb
+      - ENV=${ENV}
+      - ORIGINS=${ORIGINS}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      # DB 접속 URL 완성
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
     depends_on:
-      - db # DB가 먼저 실행되도록 함
+      - db
     restart: unless-stopped
 
-  # 3. 프론트엔드 서비스 (React)
   frontend:
-    build: ./frontend # ./frontend/Dockerfile을 사용해 빌드
+    build: ./frontend
     container_name: cpu-dashboard-frontend
     volumes:
-      - ./frontend:/app # 내 노트북의 ./frontend 폴더를 컨테이너의 /app에 연결
-      - /app/node_modules # node_modules는 컨테이너의 것을 사용 (중요!)
+      # 로컬 ./frontend -> 컨테이너 /frontend 연결
+      - ./frontend:/frontend
+      - /frontend/node_modules
     ports:
-      # [변경 3] 내 노트북 3300번 <-> 컨테이너 3300번
-      - "3300:3300"
+      - "${HOST_FRONTEND_PORT}:3300"
     environment:
-      - CHOKIDAR_USEPOLLING=true # Docker 안에서 React 자동 새로고침을 위한 설정
-      - PORT=3300 # [필수!] React가 3300 포트에서 실행되도록 설정
+      - CHOKIDAR_USEPOLLING=true
+      - PORT=3300 # React를 3300 포트로 실행
     depends_on:
-      - backend # 백엔드가 먼저 실행되도록 함
+      - backend
     restart: unless-stopped
 
-# 데이터베이스 데이터를 저장할 볼륨 정의
 volumes:
   postgres_data:

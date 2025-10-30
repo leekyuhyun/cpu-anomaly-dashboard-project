@@ -4,7 +4,6 @@ __pycache__/
 venv/
 .venv/
 env/
-*.env
 *.env.local
 .env.*.local
 
@@ -15,8 +14,13 @@ dist/
 .npm
 npm-debug.log*
 yarn-error.log
-package-lock.json
+# package-lock.json (팀원 간 버전 통일을 위해 주석 처리)
 
 # OS specific
 .DS_Store
 Thumbs.db
+
+# === SECRETS ===
+# (절대 깃허브에 올리지 마세요!)
+.env
+frontend/.env

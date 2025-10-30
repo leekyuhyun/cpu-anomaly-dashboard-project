@@ -1,5 +1,7 @@
 fastapi
 uvicorn[standard]
-pandas
-scikit-learn
-psycopg2-binary
+psycopg2-binary   # PostgreSQL 드라이버
+SQLAlchemy        # ORM (DB 관리)
+pandas            # Kaggle CSV 로드용
+psutil            # 실시간 CPU 측정용
+scikit-learn      # 이상탐지 모델용
