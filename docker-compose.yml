@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # 1. 데이터베이스 서비스 (PostgreSQL)
@@ -19,11 +19,13 @@ services:
   backend:
     build: ./backend # ./backend/Dockerfile을 사용해 빌드
     container_name: cpu-dashboard-backend
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload # 자동 새로고침
+    # [변경 1] uvicorn이 8800 포트에서 실행되도록 --port 변경
+    command: uvicorn main:app --host 0.0.0.0 --port 8800 --reload
     volumes:
       - ./backend:/app # 내 노트북의 ./backend 폴더를 컨테이너의 /app에 연결
     ports:
-      - "8000:8000"
+      # [변경 2] 내 노트북 8800번 <-> 컨테이너 8800번
+      - "8800:8800"
     environment:
       # FastAPI가 이 주소로 DB에 접속하게 됩니다.
       - DATABASE_URL=postgresql://myuser:mypassword@db:5432/cpudb
@@ -36,12 +38,14 @@ services:
     build: ./frontend # ./frontend/Dockerfile을 사용해 빌드
     container_name: cpu-dashboard-frontend
     volumes:
-      - ./frontend:/app     # 내 노트북의 ./frontend 폴더를 컨테이너의 /app에 연결
-      - /app/node_modules   # node_modules는 컨테이너의 것을 사용 (중요!)
+      - ./frontend:/app # 내 노트북의 ./frontend 폴더를 컨테이너의 /app에 연결
+      - /app/node_modules # node_modules는 컨테이너의 것을 사용 (중요!)
     ports:
-      - "3000:3000"
+      # [변경 3] 내 노트북 3300번 <-> 컨테이너 3300번
+      - "3300:3300"
     environment:
       - CHOKIDAR_USEPOLLING=true # Docker 안에서 React 자동 새로고침을 위한 설정
+      - PORT=3300 # [필수!] React가 3300 포트에서 실행되도록 설정
     depends_on:
       - backend # 백엔드가 먼저 실행되도록 함
     restart: unless-stopped

@@ -15,5 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # (docker-compose에서 볼륨 마운트로 덮어쓸 예정이라 지금 당장 큰 의미는 없습니다.)
 COPY . .
 
-# 8000번 포트를 외부에 개방합니다.
-EXPOSE 8000
+# 88s00번 포트를 외부에 개방합니다.
+EXPOSE 8800
