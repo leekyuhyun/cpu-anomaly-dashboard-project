@@ -5,7 +5,7 @@ FROM node:18-alpine
 # 2. 작업 디렉토리 설정
 # 컨테이너 내부에서 작업할 기본 폴더를 '/app'으로 지정합니다.
 # (docker-compose.yml의 volumes 경로와 일치시키는 것이 좋습니다)
-WORKDIR /app
+WORKDIR /frontend
 
 # 3. 의존성 파일 복사 (빌드 캐시 활용)
 # node_modules 설치에 필요한 package.json 파일을 먼저 복사합니다.
