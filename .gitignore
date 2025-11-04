@@ -24,3 +24,6 @@ Thumbs.db
 # (절대 깃허브에 올리지 마세요!)
 .env
 frontend/.env
+
+backend/data/cpu_data.csv
+backend/data/originals/*
