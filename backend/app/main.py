@@ -1,30 +1,33 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware # CORS 임포트
+from fastapi.middleware.cors import CORSMiddleware
+import os
+# [수정 전]: from app.api.router import api_router 
+from app.api.router import api_router
+# from app.db.init_db import init_db 
 
-app = FastAPI()
+app = FastAPI(
+    title="Frontend Communication Test API",
+    version="1.0.0" 
+)
 
-# --- CORS 미들웨어 설정 ---
-# React 앱이 실행되는 http://localhost:3000 의 요청을 허용합니다.
-origins = [
-    "http://localhost:3000",
-]
+# --- CORS 설정 ---
+origins = os.getenv("ORIGINS", "[]").strip("[]").replace("\"", "").split(",")
+origins = [origin.strip() for origin in origins if origin.strip()]
+if not origins:
+    origins = ["http://localhost:3300", "http://127.0.0.1:3300"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       # 허용할 출처 목록
-    allow_credentials=True,    # 쿠키 허용
-    allow_methods=["*"],       # 모든 HTTP 메소드 허용
-    allow_headers=["*"],       # 모든 HTTP 헤더 허용
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+# --- API 라우터 연결 ---
+app.include_router(api_router)
 
-# --- 기본 API 엔드포인트 ---
-
+# --- 기본 엔드포인트 ---
 @app.get("/")
 def read_root():
-    return {"Hello": "Backend"}
-
-# 프론트엔드 테스트용 API
-@app.get("/api/hello")
-def read_hello():
-    return {"message": "Hello from FastAPI!"}
+    return {"Hello": "API Gateway Ready for Frontend Test"}

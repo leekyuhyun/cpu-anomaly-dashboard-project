@@ -1,41 +1,34 @@
 # Makefile
-.PHONY: up up-logs down stop logs init-db
+.PHONY: up run start down stop logs
 
-# (기본) 컨테이너를 빌드하고 백그라운드에서 실행
+# (1) [최초 설정/재빌드] 프로젝트를 처음 만들었을 때 사용. 이미지를 빌드하고 모든 컨테이너를 실행.
+# up: (기존과 동일)
 up:
-	@echo "Starting all services (Docker) in detached mode..."
-	@docker-compose up -d --build
+	@echo "Building images and starting all services (Initial setup/Rebuild)..."
+	@docker compose up -d --build
 
-# 로그를 보면서 실행
-up-logs:
-	@echo "Starting all services (Docker) with logs..."
-	@docker-compose up --build
+# (2) [앱 서비스 실행/재시작] 이미 빌드된 컨테이너를 실행 또는 재시작. (새로운 start의 역할)
+# --no-build: 이미지 재빌드 없이 실행 (시간 절약)
+# -d: detached mode (백그라운드에서 시작)
+start:
+	@echo "Starting/restarting application services (db, backend, frontend) in detached mode (no rebuild)..."
+	@docker compose up -d --no-build
+
+# (3) [주요 개발 명령어] 컨테이너를 실행(시작)하고, 로그를 출력하여 개발 환경에 접속합니다. (새로운 run의 역할)
+# make start 실행 후 make logs를 실행하여 개발 환경을 즉시 재개합니다.
+run: start logs
 
 # 완전 종료
 down:
 	@echo "Stopping and removing all services (Docker)..."
-	@docker-compose down
+	@docker compose down
 
 # 임시 정지
 stop:
 	@echo "Stopping all services (Docker)..."
-	@docker-compose stop
+	@docker compose stop
 
-# 로그 실시간 보기
+# 로그 실시간 보기 (backend와 frontend 로그만 보기)
 logs:
-	@echo "Attaching to logs..."
-	@docker-compose logs -f
-
-# (Kaggle) DB 초기화 스크립트 실행
-# (실행 전: make up 으로 컨테이너를 먼저 켜야 함)
-init-db:
-	@echo "Checking for merged CSV data (backend/data/cpu_data.csv)..."
-	@rem Windows 'cmd.exe'는 if [ ! -f ] 문법을 모르므로 'if not exist'를 사용합니다.
-	@if not exist backend\data\cpu_data.csv ( \
-		echo "-> Merged CSV not found. Running merge script inside container..." && \
-		docker-compose exec backend python scripts/merge_csv.py \
-	) else ( \
-		echo "-> Merged CSV already exists. Skipping merge." \
-	)
-	@echo "Initializing database with Kaggle data..."
-	@docker-compose exec backend python scripts/init_db.py
+	@echo "Attaching to logs (backend, frontend)..."
+	@docker compose logs -f backend frontend

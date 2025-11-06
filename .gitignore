@@ -25,5 +25,7 @@ Thumbs.db
 .env
 frontend/.env
 
-backend/data/cpu_data.csv
-backend/data/originals/*
+# === MODEL / DATA ===
+# 학습된 모델 파일과 스케일러 파일
+*.pkl
+*.h5

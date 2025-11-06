@@ -1,5 +1,5 @@
-# 1. Python 3.11 버전을 기반으로 합니다.
-FROM python:3.11-slim
+# 1. Python 3.12 버전 기반으로 업데이트
+FROM python:3.12-slim
 
 # 2. 컨테이너 안의 작업 폴더를 /backend 로 설정합니다.
 WORKDIR /backend
