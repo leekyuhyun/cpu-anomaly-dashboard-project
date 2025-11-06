@@ -44,8 +44,19 @@
 - Docker Desktop (또는 Docker Engine)
 - `make` 유틸리티 (Linux/macOS 기본, Windows는 Git Bash 또는 WSL 권장)
 - Kaggle에서 학습된 모델 파일 2가지:
+
   1.  `isolation_forest_model.pkl`
   2.  `amount_time_scaler.pkl`
+
+- kaggle api key
+  ```bash
+  # 발급 방법
+  1. kaggle 회원가입
+  2. 오른쪽 위에 프로필 이미지 클릭
+  3. Settings 클릭
+  4. API -> create New Token 클릭
+  5. Json 형식의 API key 발급
+  ```
 
 ### 2. 초기 설정 및 파일 배치
 
@@ -86,3 +97,14 @@ make up
 make start
 make run
 ```
+
+## 👥 참여 구성원 (Team)
+
+본 프로젝트에 참여한 구성원 및 역할은 다음과 같습니다.
+
+| 이름 (Name) | 역할 (Role)                                                | GitHub 주소 (Profile)                                          |
+| :---------- | :--------------------------------------------------------- | :------------------------------------------------------------- |
+| **이규현**  | 백엔드 및 웹 애플리케이션 개발 (Backend & Web Application) | [https://github.com/leekyuhyun](https://github.com/leekyuhyun) |
+| **김민한**  | 빅데이터 분석 및 모델링 (Biga Data Analysis & Modeling)    | [https://github.com/minari0v0](https://github.com/minari0v0)   |
+
+---
