@@ -1,131 +1,87 @@
-# CPU 사용률 이상 탐지 대시보드 (CPU Anomaly Dashboard)
+# 💰 금융 빅데이터 기반 신용카드 사기 거래 탐지 시스템
 
-서버의 CPU 사용률 데이터를 분석하여 비정상적인 패턴(이상 징후)을 탐지하고,
-이를 실시간 웹 대시보드로 시각화하는 프로젝트입니다.
+## 🚀 프로젝트 개요 (Project Overview)
 
----
+본 프로젝트는 유럽 신용카드 거래 데이터를 기반으로 비지도 학습 모델인 **Isolation Forest**를 활용하여 사기 거래(Fraud)를 실시간으로 탐지하는 웹 애플리케이션 구축을 목표로 합니다. 극심한 클래스 불균형(Imbalanced Data) 문제를 해결하고, 실제 금융 환경에서 요구되는 높은 **재현율(Recall)**을 달성하는 데 초점을 맞췄습니다.
 
-## 🛠 기술 스택 (Tech Stack)
+전체 시스템은 **Docker Compose**를 통해 PostgreSQL, FastAPI, React 컨테이너로 구성된 현대적인 MERN/P-F-R 스택 환경에서 구동됩니다.
 
-### 뱃지 (Badges)
+### ✨ 주요 기술 스택
 
-![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?logo=fastapi&logoColor=white)
-![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=black)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-24.0-2496ED?logo=docker&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/SciKit_Learn-1.4.0-F89939?logo=scikit-learn&logoColor=white)
+| 구분               | 기술 스택                                                       | 사용 목적                                                   |
+| :----------------- | :-------------------------------------------------------------- | :---------------------------------------------------------- |
+| **빅데이터 & ML**  | `Python`, `pandas`, `scikit-learn` (Isolation Forest), `joblib` | 데이터 전처리, 모델 학습 및 이상 탐지 로직 구현             |
+| **백엔드(API)**    | `FastAPI`, `uvicorn`                                            | 고성능 비동기 API 서버 구축, 모델 로드 및 예측 결과 제공    |
+| **데이터베이스**   | `PostgreSQL`, `SQLAlchemy`                                      | 탐지된 사기 거래 이력 로깅 및 모니터링 대시보드 데이터 저장 |
+| **프론트엔드(UI)** | `React`, `axios`, `CSS`                                         | 사용자 거래 입력 및 실시간 탐지 결과 시각화                 |
+| **배포 환경**      | `Docker`, `Docker Compose`                                      | 개발 환경 격리 및 배포 표준화                               |
 
-### 상세
+## 💾 데이터셋 (Dataset)
 
-- **Backend:** Python, FastAPI
-- **Frontend:** React (JavaScript)
-- **Database:** PostgreSQL (via Docker)
-- **Orchestration:** Docker Compose
-- **ML Model:** Scikit-learn (Isolation Forest 등)
+### Credit Card Fraud Detection (Kaggle)
 
----
+- **출처:** [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- **특징:**
+  - 총 284,807건의 유럽 카드 소지자 거래 기록
+  - **클래스 불균형:** 사기 거래(`Class=1`)는 전체의 **약 0.172%**에 불과 (492건)
+  - **비식별화:** 개인 정보 보호를 위해 대부분의 피처(`V1` ~ `V28`)는 PCA(주성분 분석)를 통해 익명화되어 제공됨.
 
-## 🚀 실행 방법 (Docker)
+## 🤖 모델 및 탐지 전략 (Model & Strategy)
 
-이 프로젝트는 Docker Compose를 사용하여 모든 서비스(DB, Backend, Frontend)를 한 번에 실행합니다.
+### Isolation Forest (비지도 학습)
 
-### 📂 프로젝트 설정 (최초 1회)
+| 항목          | 내용                                                                                                                                                                                                        |
+| :------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **모델**      | **Isolation Forest (아이솔레이션 포레스트)**                                                                                                                                                                |
+| **학습 방식** | 비지도 학습 (Unsupervised Learning)                                                                                                                                                                         |
+| **사용 이유** | 사기 거래는 정상적인 데이터 분포에서 멀리 떨어진 '이상치'이므로, 소수의 이상치를 효율적으로 고립(Isolate)시키는 데 특화된 Isolation Forest가 가장 적합합니다. 대규모 데이터셋에서도 빠른 성능을 보장합니다. |
+| **탐지 기준** | 모델이 계산한 **이상치 점수(Anomaly Score)**가 특정 임계치(Threshold)보다 낮으면 사기로 판정합니다.                                                                                                         |
 
-프로젝트를 처음 실행할 때, 환경 변수 설정과 DB 초기화가 필요합니다.
+## 🛠️ 개발 환경 구축 및 실행 방법
 
-1. 환경 변수 파일 생성
+### 1. 전제 조건
 
-   프로젝트에 포함된 `.env.example` 파일 2개를 복사하여 `.env` 파일을 생성합니다.
+- Docker Desktop (또는 Docker Engine)
+- `make` 유틸리티 (Linux/macOS 기본, Windows는 Git Bash 또는 WSL 권장)
+- Kaggle에서 학습된 모델 파일 2가지:
+  1.  `isolation_forest_model.pkl`
+  2.  `amount_time_scaler.pkl`
 
-   ```bash
-   # 1. 최상위 폴더 (docker-compose.yml이 있는 곳)
-   cp .env.example .env
-   # 2. frontend 폴더
-   cp frontend/.env.example frontend/.env
-   ```
+### 2. 초기 설정 및 파일 배치
 
-   - (필요시) `.env` 파일을 열어 `POSTGRES_PASSWORD` 등을 원하는 값으로 수정합니다.
-
-2. **Docker 서비스 실행**
-
-   `make` 명령어를 사용해 Docker 컨테이너를 빌드하고 실행합니다.
-
-   ```bash
-   make up
-   ```
-
-3. 데이터베이스 초기화 및 데이터 적재
-   `make` 명령어를 사용해 `backend` 컨테이너 내부에서 `init_db.py` 스크립트를 실행합니다.
-
-   ```bash
-   make init-db
-   ```
-
-- 이 명령어는 `Makefile` 설정에 따라 `data/cpu_data.csv` 파일이 없으면 자동으로 CSV 병합 스크립트(`scripts/merge_csv.py`)를 먼저 실행한 뒤,
-
-- DB 테이블을 생성하고 병합된 CSV 데이터를 `cpu_metrics` 테이블에 삽입합니다.
-
----
-
-### 🚀 일반 실행 (Docker)
-
-최초 1회 설정이 완료된 후에는 `make up`과 `make down` 만으로 프로젝트를 실행/종료할 수 있습니다.
-
-1. 프로젝트 실행 (백그라운드)
-
-   ```bash
-   # 프로젝트 최상위 폴더에서 실행
-   make up
-   ```
-
-   - `db`, `backend`, `frontend` 3개의 컨테이너가 모두 실행됩니다.
-
-2. 서비스 접속
-
-   - **Frontend (React App)**: `http://localhost:3300`
-
-   - **Backend (FastAPI Docs)**: `http://localhost:8800/docs`
-
-3. 프로젝트 종료 (모든 컨테이너 중지 및 삭제)
-   ```bash
-   make down
-   ```
-
-### 🗃️ DB 데이터 확인 방법
-
-`make up`으로 컨테이너가 실행 중일 때, 다음 명령어로 `db` 컨테이너(PostgreSQL)에 직접 접속할 수 있습니다.
-
-1.  PostgreSQL 컨테이너 접속
-    터미널에서 아래 명령어를 실행합니다. (`[USER]`와 `[DB_NAME]`은 `.env` 파일에 설정한 `POSTGRES_USER`와 `POSTGRES_DB` 값으로 대체하세요.)
+1.  **프로젝트 클론 및 이동:**
 
     ```bash
-    docker-compose exec -it db psql -U [USER] -d [DB_NAME]
+    git clone [YOUR_REPOSITORY_URL] fraud-detection-app
+    cd fraud-detection-app
     ```
 
-2.  SQL 쿼리 실행
-    `psql` 프롬포트 (`...=#`)에서 SQL 쿼리를 입력하여 데이터를 확인합니다.
+2.  **환경 변수 설정:**
 
-        ```bash
-        -- 모든 테이블 목록 보기
+    - `mv .env_example .env` 명령어로 파일을 복사하고, `.env` 파일을 열어 `POSTGRES_PASSWORD` 등을 설정합니다.
 
-        \dt
+3.  **모델 파일 배치:**
+    - 미리 Colab에서 학습시켜 다운로드한 두 모델 파일(`.pkl`)을 **프로젝트 최상위 폴더**에 배치합니다.
+    - (`docker-compose.yml`이 이 파일을 컨테이너의 `/backend/model/` 경로로 마운트합니다.)
 
-        -- servers 테이블 데이터 확인
-        SELECT \* FROM servers;
+### 3. Docker 컨테이너 관리 (Makefile 사용)
 
-        -- cpu_metrics 테이블에 적재된 데이터 총 개수 확인 (예: 40320)
-        SELECT COUNT(\*) FROM cpu_metrics;
+프로젝트 루트에서 `make` 명령을 사용하여 컨테이너를 관리합니다.
 
-        -- cpu_metrics 테이블 샘플 데이터 5개 확인
-        SELECT \* FROM cpu_metrics LIMIT 5;
+| 명령어       | 역할                     | 설명                                                                                                                | 사용 빈도 |
+| :----------- | :----------------------- | :------------------------------------------------------------------------------------------------------------------ | :-------- |
+| `make up`    | **최초 빌드 & 시작**     | 이미지를 빌드하고 모든 서비스(DB, BE, FE)를 백그라운드에서 실행합니다. (Dockerfile/requirements.txt 변경 시 재사용) | 낮음      |
+| `make start` | **서비스 실행/재시작**   | **빌드 없이** 컨테이너를 실행하거나 재시작합니다. 리소스를 절약하는 효율적인 명령어입니다.                          | 높음      |
+| `make run`   | **개발 시작 & 모니터링** | `make start` 후, 백엔드와 프론트엔드의 로그를 실시간으로 출력합니다. (가장 많이 사용)                               | 높음      |
+| `make logs`  | **로그 확인**            | 실행 중인 `backend`와 `frontend`의 로그만 출력합니다.                                                               | 높음      |
+| `make down`  | **완전 종료**            | 모든 컨테이너와 네트워크를 완전히 제거합니다.                                                                       | 낮음      |
 
-        -- (종료 시) psql 종료
-        \q
-        ```
+### 4. 실행 및 접속
 
-## 🌿 브랜치 전략 (Branch Strategy)
+```bash
+# 1. (최초 1회) 모든 이미지를 빌드하고 실행
+make up
 
-- **`main`**: 최종 배포 버전
-- **`develop`**: `main` 브랜치로 병합(Merge) 전, 통합 테스트를 진행하는 브랜치
+# 2. (일상적) 서비스를 켜고 로그를 보며 개발 시작
+make run
+```
