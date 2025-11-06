@@ -10,7 +10,7 @@
 
 ### ✨ 주요 기술 스택
 
-- **빅데이터 & ML** : `Scikit-learn`,`RandomForest`,`Imbalanced-learn (Smote)`, `joblib`
+- **빅데이터 & ML** : `Scikit-learn`,`RandomForest`,`Imbalanced-learn (Smote)`
 
   - **사용 목적** : 데이터 전처리, 불균형 해소, 모델 학습 및 탐지 로직 구현
 
