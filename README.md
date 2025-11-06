@@ -133,6 +133,15 @@ make run
 ```bash
 # .env 파일에 설정한 POSTGRES_USER, POSTGRES_DB로 접속
 docker compose exec -it db psql -U [POSTGRES_USER] -d [POSTGRES_DB]
+
+# 전체 테이블 확인
+\dt
+
+# 테이블 조회
+SELECT * FROM 테이블 이름;
+
+# 나가기
+\qs
 ```
 
 ## 👥 참여 구성원 (Team)
