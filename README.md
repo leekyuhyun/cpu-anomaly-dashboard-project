@@ -115,7 +115,7 @@ make run
 - **프론트엔드 (React)** : `http://localhost:3300` (거래 정보 입력 및 결과 확인)
 - **백엔드 API (FastAPI)** : `http://localhost:8800/docs` (Swagger UI로 API 스펙 확인)
 - **예측 엔드포인트** : `http://localhost:8800/api/predict` (POST)
-- **통신 테스트** : `http:localhost:8800/api/test` (POST)
+- **통신 테스트** : `http://localhost:8800/api/test` (POST)
 
 ## 👥 참여 구성원 (Team)
 
