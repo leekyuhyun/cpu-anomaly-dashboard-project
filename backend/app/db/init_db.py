@@ -1,6 +1,6 @@
 from app.db import base, session
-# (DB 모델 파일 임포트 - 3단계에서 생성)
-from app.models.result_log import ResultLog 
+# [수정] 정확한 클래스 이름 PredictionLog를 사용합니다.
+from app.models import PredictionLog 
 
 def init_db():
     """
@@ -9,7 +9,8 @@ def init_db():
     """
     try:
         print("Initializing database tables...")
-        base.Base.metadata.create_all(bind=session.engine)
+        # 등록된 모든 모델(PredictionLog)을 기반으로 테이블을 생성합니다.
+        base.Base.metadata.create_all(bind=session.engine) 
         print("Database tables initialized successfully.")
     except Exception as e:
         print(f"Error initializing database: {e}")

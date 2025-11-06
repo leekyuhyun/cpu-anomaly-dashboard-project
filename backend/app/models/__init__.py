@@ -1,1 +1,1 @@
-from .result import ResultLog
+from .prediction_log import PredictionLog # <- 새 모델 임포트

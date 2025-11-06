@@ -1,3 +1,7 @@
+/* ---------------------------------------------------- */
+/* Global App & Header Styles */
+/* ---------------------------------------------------- */
+
 .App {
   text-align: center;
   background-color: #282c34;
@@ -5,60 +9,201 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 1.5vmin);
+  justify-content: flex-start; /* 상단에 붙이기 */
+  padding: 30px 10px; /* 전체 패딩 추가 */
+  font-size: calc(10px + 0.8vmin);
   color: white;
 }
 
-.predict-button {
-  background-color: #61dafb;
-  color: #282c34;
+.App-header {
+  width: 95%;
+  max-width: 1200px; /* 전체 최대 너비 */
+}
+
+.App-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
+  color: #61dafb;
+}
+
+.App-header p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #a0a0a0;
+}
+
+/* ---------------------------------------------------- */
+/* Input Form Layouts */
+/* ---------------------------------------------------- */
+
+.input-form {
+  width: 100%;
+  margin: 20px auto;
+  padding: 25px;
+  background-color: #3a3f4a;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.input-form h2 {
+  color: #61dafb;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #4f5561;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.base-inputs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.large-input {
+  flex-grow: 1; /* Time/Amount 입력창을 크게 */
+}
+
+.pca-header {
   font-size: 1.2rem;
+  color: #ccc;
+  margin: 20px 0 15px 0;
+  border-bottom: 1px dashed #4f5561;
+  padding-bottom: 5px;
+  text-align: left;
+}
+
+.input-grid {
+  display: grid;
+  /* 데스크톱: 5개 컬럼 */
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 1024px) {
+  .input-grid {
+    grid-template-columns: repeat(4, 1fr); /* 태블릿: 4개 컬럼 */
+  }
+}
+
+@media (max-width: 768px) {
+  .input-grid {
+    grid-template-columns: repeat(2, 1fr); /* 모바일: 2개 컬럼 */
+  }
+  .base-inputs {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+/* ---------------------------------------------------- */
+/* Input Field Styling */
+/* ---------------------------------------------------- */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.input-group input {
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #2e3138;
+  color: white;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  min-width: 0; /* flex/grid 내에서 오버플로우 방지 */
+}
+
+.input-group input:focus {
+  border-color: #61dafb;
+  outline: none;
+}
+
+/* ---------------------------------------------------- */
+/* Button Styles */
+/* ---------------------------------------------------- */
+
+.predict-button {
+  background-color: #ff6b6b; /* 사기 탐지에 어울리는 경고색 */
+  color: white;
+  font-size: 1.4rem;
   font-weight: bold;
-  padding: 12px 24px;
+  padding: 15px 30px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-top: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .predict-button:hover {
-  transform: scale(1.05);
+  background-color: #ff4757;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 .predict-button:disabled {
   background-color: #555;
   color: #999;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .loading {
   margin-top: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #ccc;
+  animation: pulse 1.5s infinite;
 }
+
+/* ---------------------------------------------------- */
+/* Result & Error Boxes */
+/* ---------------------------------------------------- */
 
 .result-box {
   margin-top: 30px;
-  padding: 20px;
-  border-radius: 8px;
-  width: 80%;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
   max-width: 700px;
-  text-align: left;
+  text-align: center;
   background-color: #3a3f4a;
+  font-size: 1.1rem;
+}
+
+.result-box strong {
+  display: block;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
 }
 
 .result-box pre {
   background-color: #282c34;
   padding: 15px;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow-x: auto;
-  font-size: 0.8rem;
-  color: #61dafb;
+  font-size: 0.9rem;
+  color: white;
+  white-space: pre-wrap;
+  text-align: left;
+  line-height: 1.5;
 }
 
 .error-box {
-  border: 2px solid #ff6b6b;
+  border: 3px solid #ff6b6b; /* FRAUD & Error */
 }
 
 .error-box pre {
@@ -66,5 +211,22 @@
 }
 
 .success-box {
-  border: 2px solid #61dafb;
+  border: 3px solid #61dafb; /* NORMAL */
+}
+
+.success-box pre {
+  color: #61dafb;
+}
+
+/* Animation for loading state */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
