@@ -124,12 +124,16 @@ make up
 make run
 ```
 
-### 주소
+### 5. 접속 주소 및 DB 확인
 
 - **프론트엔드 (React)** : `http://localhost:3300` (거래 정보 입력 및 결과 확인)
 - **백엔드 API (FastAPI)** : `http://localhost:8800/docs` (Swagger UI로 API 스펙 확인)
-- **예측 엔드포인트** : `http://localhost:8800/api/predict` (POST)
-- **통신 테스트** : `http://localhost:8800/api/test` (POST)
+- **DB 접속 (PostgreSQL)** : 새 터미널 창에서 아래 명령어 입력
+
+```bash
+# .env 파일에 설정한 POSTGRES_USER, POSTGRES_DB로 접속
+docker compose exec -it db psql -U [POSTGRES_USER] -d [POSTGRES_DB]
+```
 
 ## 👥 참여 구성원 (Team)
 
