@@ -3,6 +3,6 @@ uvicorn[standard]
 psycopg2-binary   # PostgreSQL 드라이버
 SQLAlchemy        # ORM (DB 관리)
 pandas            # 데이터 처리를 위해 유지
-scikit-learn      # RandomForest 모델 및 전처리 로드용
+scikit-learn == 1.6.1      # RandomForest 모델 및 전처리 로드용
 joblib            # .pkl 파일 로드용
 imbalanced-learn  # (선택적) 모델 로드 호환성을 위해 추가
