@@ -141,7 +141,7 @@ docker compose exec -it db psql -U [POSTGRES_USER] -d [POSTGRES_DB]
 SELECT * FROM 테이블 이름;
 
 # 나가기
-\qs
+\q
 ```
 
 ## 👥 참여 구성원 (Team)
