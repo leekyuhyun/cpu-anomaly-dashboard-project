@@ -10,13 +10,20 @@
 
 ### ✨ 주요 기술 스택
 
-| 구분               | 기술 스택                                                                                       | 사용 목적                                                      |
-| :----------------- | :---------------------------------------------------------------------------------------------- | :------------------------------------------------------------- | --- |
-| **빅데이터 & ML**  | `Python`, `pandas`, `scikit-learn` **`RandomForest`**, **`imbalanced-learn (SMOTE)`**, `joblib` | 데이터 전처리, 불균형 해소(SMOTE), 모델 학습 및 탐지 로직 구현 |
-| **백엔드(API)**    | `FastAPI`, `uvicorn`                                                                            | 고성능 비동기 API 서버 구축, 모델 로드 및 예측 결과 제공       |
-| **데이터베이스**   | `PostgreSQL`, `SQLAlchemy`                                                                      | 탐지된 사기 거래 이력 로깅 및 모니터링 대시보드 데이터 저장    |
-| **프론트엔드(UI)** | `React`, `axios`, `CSS`                                                                         | 사용자 거래 입력(30개 피처) 및 실시간 탐지 결과 시각화         |
-| **배포 환경**      | `Docker`, `Docker Compose`                                                                      | 개발 환경 격리 및 배포 표준화                                  |     |
+- **빅데이터 & ML** : `Scikit-learn`,`RandomForest`,`Imbalanced-learn (Smote)`
+
+  - **사용 목적** : 데이터 전처리, 불균형 해소, 모델 학습 및 탐지 로직 구현
+
+- **백엔드(API)** : `FastAPI`
+
+  - **사용 목적** : 고성능 비동기 API 서버 구축, 모델 로드 및 예측 결과 제공
+
+- **데이터베이스** : `PostgreSQL`
+
+  - **사용 목적** : 탐지된 사기 거래 이력 로깅 및 데이터 저장
+
+- **프론트엔드(UI)** : `React`
+  - **사용 목적** : 사용자 거래 입력 (30개 피쳐)
 
 ## 💾 데이터셋 (Dataset)
 
@@ -117,12 +124,25 @@ make up
 make run
 ```
 
-### 주소
+### 5. 접속 주소 및 DB 확인
 
 - **프론트엔드 (React)** : `http://localhost:3300` (거래 정보 입력 및 결과 확인)
 - **백엔드 API (FastAPI)** : `http://localhost:8800/docs` (Swagger UI로 API 스펙 확인)
-- **예측 엔드포인트** : `http://localhost:8800/api/predict` (POST)
-- **통신 테스트** : `http://localhost:8800/api/test` (POST)
+- **DB 접속 (PostgreSQL)** : 새 터미널 창에서 아래 명령어 입력
+
+```bash
+# .env 파일에 설정한 POSTGRES_USER, POSTGRES_DB로 접속
+docker compose exec -it db psql -U [POSTGRES_USER] -d [POSTGRES_DB]
+
+# 전체 테이블 확인
+\dt
+
+# 테이블 조회
+SELECT * FROM 테이블 이름;
+
+# 나가기
+\q
+```
 
 ## 👥 참여 구성원 (Team)
 

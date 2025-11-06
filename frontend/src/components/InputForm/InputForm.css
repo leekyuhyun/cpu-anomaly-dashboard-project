@@ -1,0 +1,16 @@
+.input-form {
+  width: 100%;
+  margin: 0 auto 2rem;
+  padding: 2rem;
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.input-form h2 {
+  color: #0ea5e9;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.75rem;
+}
