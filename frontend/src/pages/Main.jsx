@@ -79,7 +79,7 @@ function Main() {
 
       transactionIndexRef.current =
         (transactionIndexRef.current + 1) % simulationData.length;
-    }, 2000); // 2초 간격으로 요청
+    }, 1500); // 1.5초 간격으로 요청
   };
 
   const stopSimulation = () => {

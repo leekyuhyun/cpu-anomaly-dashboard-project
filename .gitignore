@@ -26,5 +26,5 @@ Thumbs.db
 frontend/.env
 
 # === MODEL / DATA ===
-# 학습된 모델 파일과 스케일러 파일
-*.pkl
+# [수정] 모델 파일 경로를 특정하여 Git 추적에서 제외
+backend/model/*.pkl

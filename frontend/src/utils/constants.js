@@ -133,5 +133,5 @@ export const V_FIELD_DESCRIPTIONS = {
   V28: "(-15.4 ~ 33.8)",
 };
 
-// [수정] Docker 환경에 맞게 백엔드 API 주소를 8800 포트로 고정합니다.
-export const API_URL = `http://127.0.0.1:8800/api/predict`;
+// [수정] 환경변수를 사용하여 백엔드 API 주소를 동적으로 설정합니다.
+export const API_URL = `http://127.0.0.1:${process.env.REACT_APP_BACKEND_PORT}/api/predict`;
