@@ -1,0 +1,106 @@
+.fraud-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  animation: fadeInOverlay 0.3s ease;
+}
+
+.fraud-alert-modal {
+  background-color: #2b1a1a;
+  border: 1px solid #dc2626;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+  text-align: center;
+  animation: slideInModal 0.4s ease-out;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ef4444; /* Red 500 */
+  margin-bottom: 1rem;
+}
+
+.alert-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.75rem;
+}
+
+.alert-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.fraud-alert-modal p {
+  color: #fca5a5; /* Red 300 */
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.transaction-details {
+  background-color: #3f2525;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  text-align: left;
+  color: #fecaca; /* Red 200 */
+}
+
+.transaction-details div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.transaction-details div:last-child {
+  margin-bottom: 0;
+}
+
+.detail-value {
+  font-weight: 700;
+  color: #ffffff;
+}
+.detail-value.fraud {
+  color: #f87171; /* Red 400 */
+}
+
+.close-alert-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.close-alert-button:hover {
+  background-color: #b91c1c;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInModal {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

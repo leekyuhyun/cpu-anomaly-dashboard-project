@@ -55,6 +55,8 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - PORT=3300
+      # [수정] React 앱이 백엔드 포트를 알 수 있도록 환경변수 추가
+      - REACT_APP_BACKEND_PORT=${HOST_BACKEND_PORT}
     depends_on:
       - backend
     restart: unless-stopped
