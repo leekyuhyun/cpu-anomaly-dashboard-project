@@ -10,8 +10,9 @@ import DashboardControls from "../components/DashboardControls/DashboardControls
 import RealtimeLog from "../components/RealtimeLog/RealtimeLog";
 import RiskGauge from "../components/RiskGauge/RiskGauge";
 import FraudAlert from "../components/FraudAlert/FraudAlert";
+import LogDetailModal from "../components/LogDetailModal/LogDetailModal";
 import { initialFormData } from "../utils/constants";
-import { simulationData } from "../utils/simulationData";
+import { simulationDataLarge } from "../utils/simulationDataLarge";
 import { makeAPIPrediction } from "../utils/api";
 import { handleFormChange } from "../utils/formHandlers";
 import "./Main.css";
@@ -31,10 +32,11 @@ function Main() {
   const [simulationLog, setSimulationLog] = useState([]);
   const [riskScore, setRiskScore] = useState(0);
   const [alertTransaction, setAlertTransaction] = useState(null);
+  const [detailedLog, setDetailedLog] = useState(null); // 로그 상세 보기 모달용 상태
   const intervalRef = useRef(null);
   const transactionIndexRef = useRef(0);
 
-  // --- 수동 분석 모드 핸들러 ---
+  // --- 핸들러 ---
   const onFormChange = (e) => handleFormChange(e, setFormData);
   const handleLoadScenario = (scenarioData) => {
     setFormData(scenarioData);
@@ -54,15 +56,15 @@ function Main() {
     setLoading(false);
   };
 
-  // --- 실시간 시뮬레이션 핸들러 ---
   const startSimulation = () => {
     setIsSimulating(true);
     setSimulationLog([]);
+    setDetailedLog(null);
     transactionIndexRef.current = 0;
 
     intervalRef.current = setInterval(async () => {
       const currentTransaction =
-        simulationData[transactionIndexRef.current];
+        simulationDataLarge[transactionIndexRef.current];
       const response = await makeAPIPrediction(currentTransaction);
 
       if (response.success) {
@@ -73,13 +75,11 @@ function Main() {
           setAlertTransaction(resultData);
         }
       } else {
-        // API 오류 로그 추가 (선택 사항)
         console.error("Simulation API Error:", response.error);
       }
-
       transactionIndexRef.current =
-        (transactionIndexRef.current + 1) % simulationData.length;
-    }, 1500); // 1.5초 간격으로 요청
+        (transactionIndexRef.current + 1) % simulationDataLarge.length;
+    }, 1500);
   };
 
   const stopSimulation = () => {
@@ -96,7 +96,14 @@ function Main() {
     }
   };
 
-  // 컴포넌트 언마운트 시 시뮬레이션 자동 중지
+  const handleLogClick = (logEntry) => {
+    setDetailedLog(logEntry);
+  };
+  
+  const handleCloseDetailModal = () => {
+    setDetailedLog(null);
+  };
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -105,13 +112,11 @@ function Main() {
     };
   }, []);
 
-  // --- 렌더링 ---
   return (
     <div className="main">
       <div className="main-container">
         <Header />
 
-        {/* 모드 전환 토글 */}
         <div className="mode-toggle">
           <button
             onClick={() => setMode("simulation")}
@@ -127,7 +132,6 @@ function Main() {
           </button>
         </div>
 
-        {/* 실시간 대시보드 모드 */}
         {mode === "simulation" && (
           <div className="dashboard-view">
             <DashboardControls
@@ -139,13 +143,12 @@ function Main() {
                 <RiskGauge score={riskScore} />
               </div>
               <div className="log-column">
-                <RealtimeLog log={simulationLog} />
+                <RealtimeLog log={simulationLog} onLogClick={handleLogClick} />
               </div>
             </div>
           </div>
         )}
 
-        {/* 수동 분석 모드 */}
         {mode === "manual" && (
           <div className="manual-view">
             <InputForm
@@ -157,15 +160,25 @@ function Main() {
             />
             <PredictButton onClick={onPredictClick} loading={loading} />
             {loading && <LoadingIndicator />}
-            <ResultBox result={manualResult} error={error} />
+            <ResultBox
+              result={manualResult}
+              error={error}
+              formData={formData}
+            />
           </div>
         )}
 
-        {/* 사기 경고 모달 */}
         {alertTransaction && (
           <FraudAlert
             transaction={alertTransaction}
             onClose={() => setAlertTransaction(null)}
+          />
+        )}
+
+        {detailedLog && (
+          <LogDetailModal
+            transaction={detailedLog}
+            onClose={handleCloseDetailModal}
           />
         )}
       </div>
