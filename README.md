@@ -1,8 +1,8 @@
-# 💰 금융 빅데이터 기반 신용카드 사기 거래 탐지 시스템
+# 💰 금융 빅데이터 기반 신용카드 이상 거래 탐지 시스템
 
 ## 🚀 프로젝트 개요 (Project Overview)
 
-본 프로젝트는 유럽 신용카드 거래 데이터를 기반으로 **지도 학습 모델(RandomForest)**과 **데이터 불균형 해소 기술(SMOTE)**을 활용하여 사기 거래(Fraud)를 실시간으로 탐지하는 웹 애플리케이션 구축을 목표로 합니다.
+본 프로젝트는 유럽 신용카드 거래 데이터를 기반으로 **지도 학습 모델(RandomForest)**과 **데이터 불균형 해소 기술(SMOTE)**을 활용하여 이상 거래(Anomaly)를 실시간으로 탐지하는 웹 애플리케이션 구축을 목표로 합니다.
 
 초기 비지도 학습 모델(Isolation Forest)의 낮은 탐지율(Recall 26%)을 **F1-Score 81%**까지 끌어올리는 모델 개선 과정을 핵심으로 하며, 실제 금융 환경에서 요구되는 높은 탐지율(Recall 77%)을 달성하는 데 초점을 맞췄습니다.
 
@@ -20,19 +20,19 @@
 
 - **데이터베이스** : `PostgreSQL`
 
-  - **사용 목적** : 탐지된 사기 거래 이력 로깅 및 데이터 저장
+  - **사용 목적** : 탐지된 이상 거래 이력 로깅 및 데이터 저장
 
 - **프론트엔드(UI)** : `React`
   - **사용 목적** : 사용자 거래 입력 (30개 피쳐)
 
 ## 💾 데이터셋 (Dataset)
 
-### Credit Card Fraud Detection (Kaggle)
+### Credit Card Anomaly Detection (Kaggle)
 
 - **출처:** [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
 - **특징:**
   - 총 284,807건의 유럽 카드 소지자 거래 기록
-  - **클래스 불균형:** 사기 거래(`Class=1`)는 전체의 **약 0.172%**에 불과 (492건)
+  - **클래스 불균형:** 이상 거래(`Class=1`)는 전체의 **약 0.172%**에 불과 (492건)
   - **비식별화:** 개인 정보 보호를 위해 대부분의 피처(`V1` ~ `V28`)는 PCA(주성분 분석)를 통해 익명화되어 제공됨.
 
 ## 🤖 모델 및 탐지 전략 (Model & Strategy)
@@ -41,11 +41,11 @@
 
 ### 1. 최종 모델 (Final Model): RandomForest + SMOTE
 
-최종적으로 **지도 학습(Supervised Learning)** 기반의 **RandomForest** 모델을 채택했습니다. 이는 데이터 불균형 문제를 **SMOTE(Synthetic Minority Over-sampling Technique)** 기법으로 해소하여, 사기 거래(소수 클래스)에 대한 예측 능력을 극대화한 결과입니다.
+최종적으로 **지도 학습(Supervised Learning)** 기반의 **RandomForest** 모델을 채택했습니다. 이는 데이터 불균형 문제를 **SMOTE(Synthetic Minority Over-sampling Technique)** 기법으로 해소하여, 이상 거래(소수 클래스)에 대한 예측 능력을 극대화한 결과입니다.
 
 ### 2. 모델 선택 과정 및 성능 비교
 
-초기 비지도 학습 모델(Isolation Forest)과 최종 지도 학습 모델의 성능을 비교하여, 데이터 전처리와 모델링 전략의 중요성을 입증했습니다. 금융 분야에서는 **재현율(Recall)**을 높여 실제 사기를 놓치지 않는 것이 가장 중요하며, 최종 모델은 이 목표를 성공적으로 달성했습니다.
+초기 비지도 학습 모델(Isolation Forest)과 최종 지도 학습 모델의 성능을 비교하여, 데이터 전처리와 모델링 전략의 중요성을 입증했습니다. 금융 분야에서는 **재현율(Recall)**을 높여 실제 이상을 놓치지 않는 것이 가장 중요하며, 최종 모델은 이 목표를 성공적으로 달성했습니다.
 
 - **빅데이터 & ML**
   - **기술 스택:** Python, pandas, scikit-learn, RandomForest, imbalanced-learn (SMOTE), joblib
@@ -55,7 +55,7 @@
   - **사용 목적:** 고성능 비동기 API 서버 구축, 모델 로드 및 예측 결과 제공
 - **데이터베이스**
   - **기술 스택:** PostgreSQL, SQLAlchemy
-  - **사용 목적:** 탐지된 사기 거래 이력 로깅 및 모니터링 대시보드 데이터 저장
+  - **사용 목적:** 탐지된 이상 거래 이력 로깅 및 모니터링 대시보드 데이터 저장
 - **프론트엔드 (UI)**
   - **기술 스택:** React, axios, CSS
   - **사용 목적:** 사용자 거래 입력(30개 피처) 및 실시간 탐지 결과 시각화

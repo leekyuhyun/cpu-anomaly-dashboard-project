@@ -1,12 +1,12 @@
 import React from "react";
-import "./FraudAlert.css";
+import "./AnomalyAlert.css";
 
-const FraudAlert = ({ transaction, onClose }) => {
+const AnomalyAlert = ({ transaction, onClose }) => {
   if (!transaction) return null;
 
   return (
-    <div className="fraud-alert-overlay">
-      <div className="fraud-alert-modal">
+    <div className="anomaly-alert-overlay">
+      <div className="anomaly-alert-modal">
         <div className="alert-header">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -20,16 +20,16 @@ const FraudAlert = ({ transaction, onClose }) => {
               clipRule="evenodd"
             />
           </svg>
-          <h2>사기 거래 경고</h2>
+          <h2>이상 거래 경고</h2>
         </div>
         <p>
-          위험도 높은 거래가 탐지되었습니다! 즉시 확인이 필요합니다.
+          위험도 높은 이상 거래가 탐지되었습니다! 즉시 확인이 필요합니다.
         </p>
         <div className="transaction-details">
           <div>
             <strong>위험도:</strong>
-            <span className="detail-value fraud">
-              {(transaction.fraud_probability * 100).toFixed(2)}%
+            <span className="detail-value anomaly">
+              {(transaction.anomaly_probability * 100).toFixed(2)}%
             </span>
           </div>
           <div>
@@ -49,4 +49,4 @@ const FraudAlert = ({ transaction, onClose }) => {
   );
 };
 
-export default FraudAlert;
+export default AnomalyAlert;
