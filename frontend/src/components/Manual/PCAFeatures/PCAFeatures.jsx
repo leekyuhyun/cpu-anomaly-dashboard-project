@@ -1,5 +1,5 @@
-import InputGroup from "../InputGroup/InputGroup";
-import { V_FIELD_DESCRIPTIONS } from "../../utils/constants";
+import InputGroup from "../../Common/InputGroup/InputGroup";
+import { V_FIELD_DESCRIPTIONS } from "../../../utils/constants";
 import "./PCAFeatures.css";
 
 export default function PCAFeatures({ formData, onChange }) {

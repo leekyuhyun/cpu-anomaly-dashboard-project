@@ -1,4 +1,4 @@
-import InputGroup from "../InputGroup/InputGroup";
+import InputGroup from "../../Common/InputGroup/InputGroup";
 import "./BaseInputs.css";
 
 export default function BaseInputs({ formData, onTimeChange, onAmountChange }) {

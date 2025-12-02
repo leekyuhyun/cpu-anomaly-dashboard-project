@@ -45,9 +45,7 @@ export default function ResultBox({ result, error, formData }) {
             ▼
           </span>
         </div>
-        <div className="result-tip">
-          (자세한 분석을 보려면 클릭하세요)
-        </div>
+        <div className="result-tip">(자세한 분석을 보려면 클릭하세요)</div>
       </div>
       {isExpanded && <ExpertAnalysis transaction={transactionData} />}
     </React.Fragment>
