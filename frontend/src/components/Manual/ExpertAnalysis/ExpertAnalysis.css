@@ -1,0 +1,88 @@
+.expert-analysis-container {
+  background-color: #29374d; /* Darker blue-gray */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  border-left: 4px solid #0ea5e9; /* Sky-blue accent */
+  animation: slideDown 0.4s ease-out;
+}
+
+.expert-analysis-container h4 {
+  margin: 0 0 1.2rem 0;
+  color: #e2e8f0; /* Slate 200 */
+  font-size: 1.1rem;
+  text-align: center;
+  border-bottom: 1px solid #475569;
+  padding-bottom: 0.75rem;
+}
+
+.analysis-section {
+  margin-bottom: 1rem;
+}
+.analysis-section:last-child {
+  margin-bottom: 0;
+}
+
+.analysis-section h5 {
+  color: #94a3b8; /* Slate 400 */
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.analysis-section p,
+.analysis-section li {
+  color: #cbd5e1; /* Slate 300 */
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.analysis-section ul {
+  padding-left: 1.2rem;
+  margin: 0;
+  list-style-type: "- ";
+}
+
+.analysis-section li {
+  margin-bottom: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+.analysis-section strong {
+  color: #f59e0b; /* Amber 500 */
+  font-weight: 600;
+}
+
+.analysis-section.conclusion {
+  background-color: rgba(15, 23, 42, 0.5);
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+}
+
+.analysis-section.conclusion p {
+  font-weight: 600;
+  margin: 0;
+}
+
+.analysis-section.conclusion strong.fraud-text {
+  color: #f87171; /* Red 400 for fraud */
+}
+
+.analysis-section.conclusion strong.normal-text {
+  color: #34d399; /* Green 400 for normal */
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

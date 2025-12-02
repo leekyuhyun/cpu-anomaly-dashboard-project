@@ -53,24 +53,31 @@
   width: 100%;
 }
 
-.dashboard-layout {
-  display: flex;
+.dashboard-layout-grid {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
   gap: 1.5rem;
   width: 100%;
 }
 
-.gauge-column {
-  flex: 1;
-  min-width: 250px;
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 차트와 로그 사이 간격 */
 }
 
-.log-column {
-  flex: 3;
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 게이지, 정적 경고창, 시스템 정보 박스 사이 간격 */
 }
 
-/* 반응형 레이아웃 */
-@media (max-width: 900px) {
-  .dashboard-layout {
-    flex-direction: column;
+/* 임시 placeholder 스타일 제거 */
+
+/* 반응형 레이아웃 수정 */
+@media (max-width: 1024px) {
+  .dashboard-layout-grid {
+    /* 작은 화면에서는 단일 컬럼으로 변경 */
+    grid-template-columns: 1fr;
   }
 }

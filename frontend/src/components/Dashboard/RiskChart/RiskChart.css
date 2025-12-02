@@ -1,0 +1,40 @@
+.risk-chart-container {
+  height: 300px;
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-header {
+  color: #0ea5e9;
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.chart-area {
+  flex-grow: 1;
+  position: relative;
+  min-height: 200px; /* 차트의 최소 높이 확보 */
+}
+
+/* 데이터 없을 때 메시지 스타일 */
+.chart-note {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #94a3b8;
+  font-size: 1rem;
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(30, 41, 59, 0.8);
+  border-radius: 0.5rem;
+  line-height: 1.5;
+}
