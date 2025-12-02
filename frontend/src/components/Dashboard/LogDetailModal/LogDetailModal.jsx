@@ -1,5 +1,5 @@
 import React from "react";
-import ExpertAnalysis from "../ExpertAnalysis/ExpertAnalysis";
+import ExpertAnalysis from "../../Manual/ExpertAnalysis/ExpertAnalysis";
 import "./LogDetailModal.css";
 
 const LogDetailModal = ({ transaction, onClose }) => {

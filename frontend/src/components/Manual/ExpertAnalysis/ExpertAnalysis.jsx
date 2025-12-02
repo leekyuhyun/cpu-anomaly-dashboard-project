@@ -1,3 +1,5 @@
+// src/components/Manual/ExpertAnalysis/ExpertAnalysis.jsx 전체 내용
+
 import React from "react";
 import "./ExpertAnalysis.css";
 
@@ -53,8 +55,8 @@ const ExpertAnalysis = ({ transaction }) => {
             </ul>
           ) : (
             <p>
-              단일 변수의 이상치보다는, 여러 변수 간의 복합적인 상호작용을
-              통해 사기 거래의 특징이 발견되었습니다.
+              단일 변수의 이상치보다는, 여러 변수 간의 복합적인 상호작용을 통해
+              사기 거래의 특징이 발견되었습니다.
             </p>
           )
         ) : (
@@ -69,13 +71,15 @@ const ExpertAnalysis = ({ transaction }) => {
         <h5>위험도 분석</h5>
         {is_fraud ? (
           <p>
-            산출된 거래 위험도는 <strong>{ (fraud_probability * 100).toFixed(2) }%</strong>
+            산출된 거래 위험도는{" "}
+            <strong>{(fraud_probability * 100).toFixed(2)}%</strong>
             입니다. 이 점수대에서 본 AI 모델은 약 85%의 탐지 정확도(Precision)를
             보이며, 이는 실제 사기 거래일 확률이 높다는 것을 의미합니다.
           </p>
         ) : (
           <p>
-            산출된 거래 위험도는 <strong>{ (fraud_probability * 100).toFixed(2) }%</strong>
+            산출된 거래 위험도는{" "}
+            <strong>{(fraud_probability * 100).toFixed(2)}%</strong>
             로, 사기 거래로 판단하는 임계값(50%)을 넘지 않았습니다.
           </p>
         )}

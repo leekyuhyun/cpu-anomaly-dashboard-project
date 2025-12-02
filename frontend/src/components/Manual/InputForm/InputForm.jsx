@@ -3,7 +3,7 @@ import PCAFeatures from "../PCAFeatures/PCAFeatures";
 import {
   sampleNormalTransaction,
   sampleFraudTransaction,
-} from "../../utils/constants";
+} from "../../../utils/constants";
 import "./InputForm.css";
 
 export default function InputForm({
