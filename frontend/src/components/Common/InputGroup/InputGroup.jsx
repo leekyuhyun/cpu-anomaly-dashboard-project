@@ -5,22 +5,22 @@ export default function InputGroup({
   name,
   value,
   onChange,
-  description,
-  step = "any",
+  placeholder,
+  ...props
 }) {
   return (
-    <div className="input-group">
-      <label htmlFor={name}>
-        {label}{" "}
-        {description && <span className="description">{description}</span>}
+    <div className="input-group-new">
+      <label htmlFor={name} className="visually-hidden">
+        {label}
       </label>
       <input
         id={name}
         name={name}
         type="number"
-        step={step}
         value={value}
         onChange={onChange}
+        placeholder={placeholder || label}
+        {...props}
       />
     </div>
   );

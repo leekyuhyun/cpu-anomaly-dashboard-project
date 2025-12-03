@@ -1,83 +1,105 @@
-.main {
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-start; /* 콘텐츠가 길어지면 위쪽 정렬 */
-  justify-content: center;
-  padding: 40px 20px;
-}
+/* New Light-Mode Layout Styles */
 
-.main-container {
+.app-container {
   width: 100%;
-  max-width: 1200px; /* 최대 너비 조정 */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.app-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-}
-
-/* 모드 전환 토글 */
-.mode-toggle {
-  display: flex;
-  background-color: #1e293b;
-  border-radius: 0.75rem;
-  padding: 0.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.mode-toggle button {
-  padding: 0.75rem 1.5rem;
+.app-header h1 {
+  font-size: 1.75rem;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.app-header p {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+/* Navigation Tabs */
+.app-nav {
+  display: flex;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-button {
+  padding: 1rem 1.25rem;
   border: none;
   background-color: transparent;
-  color: #94a3b8;
+  color: var(--text-light);
   font-size: 1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease-in-out;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; /* Aligns with the container's border */
 }
 
-.mode-toggle button.active {
-  background-color: #0ea5e9;
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+.nav-button:hover {
+  color: var(--text-dark);
 }
 
-.mode-toggle button:not(.active):hover {
-  background-color: #334155;
-  color: #e2e8f0;
+.nav-button.active {
+  color: var(--primary-blue);
+  border-bottom-color: var(--primary-blue);
+  font-weight: 600;
 }
 
-/* 대시보드 레이아웃 */
+/* Main Content Area */
+.app-main {
+  width: 100%;
+}
+
+/* Page-specific views */
 .dashboard-view,
 .manual-view {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
+/* Dashboard Grid Layout - To be refined when components are styled */
 .dashboard-layout-grid {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr 350px; /* Example: main content and a sidebar */
   gap: 1.5rem;
   width: 100%;
 }
 
-.left-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* 차트와 로그 사이 간격 */
-}
-
+.left-panel,
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* 게이지, 정적 경고창, 시스템 정보 박스 사이 간격 */
+  gap: 1.5rem;
 }
 
-/* 임시 placeholder 스타일 제거 */
-
-/* 반응형 레이아웃 수정 */
+/* Responsive Layout */
 @media (max-width: 1024px) {
   .dashboard-layout-grid {
-    /* 작은 화면에서는 단일 컬럼으로 변경 */
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
   }
+}
+@media (max-width: 768px) {
+    .app-container {
+        padding: 1rem;
+    }
+    .app-header h1 {
+        font-size: 1.5rem;
+    }
+    .nav-button {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
 }

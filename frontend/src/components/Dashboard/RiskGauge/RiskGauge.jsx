@@ -1,38 +1,65 @@
 import React from "react";
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "./RiskGauge.css";
 
-const RiskGauge = ({ score }) => {
-  const scorePercentage = score * 100;
-  const clampedScore = Math.min(Math.max(scorePercentage, 0), 100);
-  const rotation = (clampedScore / 100) * 180 - 90; // -90 to 90 degrees
+// Register the necessary elements for Chart.js
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-  const getRiskColor = (s) => {
-    if (s > 80) return "#ef4444"; // Red
-    if (s > 50) return "#f97316"; // Orange
-    if (s > 20) return "#eab308"; // Yellow
-    return "#22c55e"; // Green
+// RiskGauge now uses Chart.js for a modern look, consistent with RiskChart.
+
+const getRiskProfile = (score) => {
+  const percentage = score * 100;
+  if (percentage >= 90) {
+    return { level: "매우 위험", color: "#B02A37", className: "status-critical" };
+  }
+  if (percentage >= 70) {
+    return { level: "높음", color: "var(--danger-red)", className: "status-high" };
+  }
+  if (percentage >= 40) {
+    return { level: "보통", color: "#fd7e14", className: "status-medium" }; // Orange
+  }
+  return { level: "낮음", color: "var(--success-green)", className: "status-low" };
+};
+
+const RiskGauge = ({ score }) => {
+  const riskProfile = getRiskProfile(score);
+  const scorePercentage = score * 100;
+
+  const data = {
+    labels: ["Risk", "Remaining"],
+    datasets: [
+      {
+        data: [scorePercentage, 100 - scorePercentage],
+        backgroundColor: [riskProfile.color, "rgba(0, 0, 0, 0.05)"],
+        borderColor: ["transparent", "transparent"],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: -90,
+      },
+    ],
   };
 
-  const color = getRiskColor(clampedScore);
+  const options = {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    cutout: "80%", // Makes it a doughnut
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+  };
 
   return (
     <div className="risk-gauge-container">
-      <h3>위험도 분석</h3>
-      <div className="gauge-wrapper">
-        <div className="gauge">
-          <div className="gauge-background"></div>
-          <div
-            className="gauge-needle"
-            style={{ transform: `rotate(${rotation}deg)` }}
-          ></div>
-          <div className="gauge-center-circle"></div>
-        </div>
-        <div className="gauge-value" style={{ color: color }}>
-          {clampedScore.toFixed(2)}%
-        </div>
-        <div className="gauge-labels">
-          <span>안전</span>
-          <span>위험</span>
+      <div className="gauge-chart-wrapper">
+        <Doughnut data={data} options={options} />
+        <div className="gauge-text-content">
+          <div className={`gauge-level ${riskProfile.className}`}>
+            {riskProfile.level}
+          </div>
+          <div className="gauge-subtitle">위험도 수준</div>
         </div>
       </div>
     </div>

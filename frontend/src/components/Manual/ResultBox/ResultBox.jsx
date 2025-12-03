@@ -1,53 +1,59 @@
-import React, { useState } from "react";
-import ExpertAnalysis from "../ExpertAnalysis/ExpertAnalysis";
+import React from "react";
 import "./ResultBox.css";
 
-export default function ResultBox({ result, error, formData }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  if (!result && !error) return null;
+// Merged ResultBox and ExpertAnalysis into one component for a cleaner design.
+export default function ResultBox({ result, error }) {
+  if (!result && !error) {
+    return null;
+  }
 
   if (error) {
     return (
-      <div className="result-box error">
-        <h3>❌ 오류 발생</h3>
-        <pre>{error}</pre>
+      <div className="result-box-new error">
+        <h4>오류 발생</h4>
+        <p>분석 중 문제가 발생했습니다. 다시 시도해주세요.</p>
+        <pre>{typeof error === 'object' ? JSON.stringify(error, null, 2) : error}</pre>
       </div>
     );
   }
 
-  // 예측 결과와 원본 입력 데이터를 합쳐서 ExpertAnalysis로 전달
-  const transactionData = { ...result, ...formData };
+  const { is_fraud, fraud_probability, top_features } = result;
+  const probabilityPercent = (fraud_probability * 100).toFixed(2);
+  const resultClass = is_fraud ? "fraud" : "normal";
 
   return (
-    // React.Fragment를 사용하여 여러 컴포넌트를 그룹화
-    <React.Fragment>
-      <div
-        className={`result-box ${result.is_fraud ? "fraud" : "normal"}`}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <h3>
-          {result.is_fraud
-            ? "🚨 탐지 결과: 사기(FRAUD) 의심!"
-            : "✅ 탐지 결과: 정상(NORMAL) 거래"}
-        </h3>
-        <div className="result-summary">
-          <p>
-            <strong>탐지 상태:</strong> {result.prediction}
-          </p>
-          <p>
-            <strong>사기 확률:</strong>{" "}
-            {(result.fraud_probability * 100).toFixed(2)}%
-          </p>
-          <span
-            className={`result-toggle-icon ${isExpanded ? "expanded" : ""}`}
-          >
-            ▼
-          </span>
-        </div>
-        <div className="result-tip">(자세한 분석을 보려면 클릭하세요)</div>
+    <div className={`result-box-new ${resultClass}`}>
+      <div className="result-probability-section">
+        <div className="probability-value">{probabilityPercent}%</div>
+        <div className="probability-label">이상 거래 확률</div>
       </div>
-      {isExpanded && <ExpertAnalysis transaction={transactionData} />}
-    </React.Fragment>
+      <div className="result-details-section">
+        <h4>AI 분석 리포트</h4>
+        <div className="detail-item">
+          <h5>종합 의견</h5>
+          <p>
+            분석 결과, 본 거래는{" "}
+            <strong className={resultClass}>
+              '{is_fraud ? "이상 거래 의심" : "정상"}'
+            </strong>{" "}
+            거래로 판단됩니다.
+          </p>
+        </div>
+        <div className="detail-item">
+          <h5>주요 판단 근거</h5>
+          {top_features && top_features.length > 0 ? (
+            <div className="features-tags">
+              {top_features.map((feature, index) => (
+                <span key={index} className="feature-tag">
+                  {feature}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p>복합적인 요인을 통해 분석되었습니다.</p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

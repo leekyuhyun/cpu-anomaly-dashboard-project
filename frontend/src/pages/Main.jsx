@@ -1,18 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Header from "../components/Common/Header/Header";
-import InputForm from "../components/Manual/InputForm/InputForm";
-import PredictButton from "../components/Manual/PredictButton/PredictButton";
-import ResultBox from "../components/Manual/ResultBox/ResultBox";
+// import Header from "../components/Common/Header/Header"; // No longer used directly here
 import LoadingIndicator from "../components/Common/LoadingIndicator/LoadingIndicator";
-import DashboardControls from "../components/Dashboard/DashboardControls/DashboardControls";
-import RealtimeLog from "../components/Dashboard/RealtimeLog/RealtimeLog";
-import RiskGauge from "../components/Dashboard/RiskGauge/RiskGauge";
-import StaticFraudAlert from "../components/Dashboard/StaticFraudAlert/StaticFraudAlert";
-import SystemInfoBox from "../components/Dashboard/SystemInfoBox/SystemInfoBox";
 import LogDetailModal from "../components/Dashboard/LogDetailModal/LogDetailModal";
-import RiskChart from "../components/Dashboard/RiskChart/RiskChart";
+import DashboardPage from "./DashboardPage"; // Import new page component
+import ManualAnalysisPage from "./ManualAnalysisPage"; // Import new page component
+import Clock from "../components/Common/Clock/Clock"; // Import Clock
 import { initialFormData } from "../utils/constants";
 import { simulationDataLarge } from "../utils/simulationDataLarge";
 import { makeAPIPrediction } from "../utils/api";
@@ -23,7 +17,7 @@ function Main() {
   // --- 공통 상태 ---
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState("simulation"); // 'manual' vs 'simulation'
+  const [mode, setMode] = useState("simulation"); // 'simulation' vs 'manual'
 
   // --- 수동 분석 모드 상태 ---
   const [formData, setFormData] = useState(initialFormData);
@@ -72,7 +66,11 @@ function Main() {
       const response = await makeAPIPrediction(currentTransaction);
 
       if (response.success) {
-        const resultData = { ...response.data, ...currentTransaction };
+        const resultData = {
+          ...response.data,
+          ...currentTransaction,
+          timestamp: new Date(),
+        };
 
         // 1. 로그 업데이트 (최신 50개 유지)
         setSimulationLog((prevLog) => [resultData, ...prevLog].slice(0, 50));
@@ -139,78 +137,64 @@ function Main() {
   }, []);
 
   return (
-    <div className="main">
-      <div className="main-container">
-        <Header />
-
-        <div className="mode-toggle">
-          <button
-            onClick={() => setMode("simulation")}
-            className={mode === "simulation" ? "active" : ""}
-          >
-            분석 대시보드
-          </button>
-          <button
-            onClick={() => setMode("manual")}
-            className={mode === "manual" ? "active" : ""}
-          >
-            수동 분석
-          </button>
+    // The new layout structure begins here.
+    <div className="app-container">
+      <header className="app-header">
+        <div>
+          <h1>신용카드 이상 거래 탐지 시스템</h1>
+          <p>30개 거래 피처를 이용한 실시간 사기 탐지</p>
         </div>
+        <Clock />
+      </header>
 
-        {mode === "simulation" && (
-          <div className="dashboard-view">
-            <DashboardControls
-              isSimulating={isSimulating}
-              onToggleSimulation={handleToggleSimulation}
-            />
+      <nav className="app-nav">
+        <button
+          onClick={() => setMode("simulation")}
+          className={`nav-button ${mode === "simulation" ? "active" : ""}`}
+        >
+          실시간 이상 거래 분석
+        </button>
+        <button
+          onClick={() => setMode("manual")}
+          className={`nav-button ${mode === "manual" ? "active" : ""}`}
+        >
+          수동 분석
+        </button>
+      </nav>
 
-            <div className="dashboard-layout-grid">
-              <div className="left-panel">
-                {/* ✅ RiskChart 컴포넌트 추가 및 데이터 전달 */}
-                <RiskChart data={riskChartData} />
-                <RealtimeLog log={simulationLog} onLogClick={handleLogClick} />
-              </div>
-
-              <div className="right-panel">
-                <RiskGauge score={riskScore} />
-
-                <StaticFraudAlert
-                  transaction={alertTransaction}
-                  onConfirm={handleCloseStaticAlert}
-                />
-
-                <SystemInfoBox />
-              </div>
-            </div>
-          </div>
-        )}
-        {mode === "manual" && (
-          <div className="manual-view">
-            <InputForm
-              formData={formData}
-              onFormChange={onFormChange}
-              onTimeChange={onFormChange}
-              onAmountChange={onFormChange}
-              onLoadScenario={handleLoadScenario}
-            />
-            <PredictButton onClick={onPredictClick} loading={loading} />
-            {loading && <LoadingIndicator />}
-            <ResultBox
-              result={manualResult}
-              error={error}
-              formData={formData}
-            />
-          </div>
-        )}
-
-        {detailedLog && (
-          <LogDetailModal
-            transaction={detailedLog}
-            onClose={handleCloseDetailModal}
+      <main className="app-main">
+        {mode === "simulation" ? (
+          <DashboardPage
+            isSimulating={isSimulating}
+            onToggleSimulation={handleToggleSimulation}
+            riskChartData={riskChartData}
+            simulationLog={simulationLog}
+            onLogClick={handleLogClick}
+            riskScore={riskScore}
+            alertTransaction={alertTransaction}
+            onCloseStaticAlert={handleCloseStaticAlert}
+          />
+        ) : (
+          <ManualAnalysisPage
+            formData={formData}
+            onFormChange={onFormChange}
+            onLoadScenario={handleLoadScenario}
+            onPredictClick={onPredictClick}
+            loading={loading}
+            manualResult={manualResult}
+            error={error}
           />
         )}
-      </div>
+      </main>
+
+      {detailedLog && (
+        <LogDetailModal
+          transaction={detailedLog}
+          onClose={handleCloseDetailModal}
+        />
+      )}
+      {/* The top-level loading indicator might be needed if there are page-level loads.
+          For now, loading is handled inside ManualAnalysisPage. */}
     </div>
   );
 }

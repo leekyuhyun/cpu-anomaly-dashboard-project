@@ -28,20 +28,19 @@ ChartJS.register(
 const RiskChart = ({ data }) => {
   // data는 [{ time: number, score: number, log_id: number }] 형태
   const chartData = {
-    // x축 레이블을 로그 ID로 설정
-    labels: data.map((item) => `Log ${item.log_id}`),
+    // x축 레이블을 로그 ID로 단순화
+    labels: data.map((item) => item.log_id),
     datasets: [
       {
         label: "위험도 (%)",
-        // 위험도 점수(0~1)를 백분율(0~100)로 변환
         data: data.map((item) => item.score * 100),
         fill: true,
-        backgroundColor: "rgba(14, 165, 233, 0.2)", // Sky Blue Area
-        borderColor: "#0ea5e9", // Sky Blue Line
+        backgroundColor: "rgba(13, 110, 253, 0.2)", // New primary blue, semi-transparent
+        borderColor: "rgba(13, 110, 253, 1)",      // New primary blue
         borderWidth: 2,
-        pointRadius: 3,
-        pointBackgroundColor: "#0ea5e9",
-        tension: 0.4, // 곡선 부드럽게
+        pointRadius: 2,
+        pointBackgroundColor: "rgba(13, 110, 253, 1)",
+        tension: 0.4,
       },
     ],
   };
@@ -75,32 +74,30 @@ const RiskChart = ({ data }) => {
       y: {
         min: 0,
         max: 100,
-        title: { display: true, text: "위험도 (%)", color: "#94a3b8" },
-        ticks: { color: "#94a3b8" },
-        grid: { color: "#334155" },
+        ticks: { color: "#6c757d" }, // var(--text-light)
+        grid: {
+          display: false, // Hide grid lines
+          drawBorder: false,
+        },
       },
       x: {
-        title: { display: true, text: "거래 로그 (시간 순)", color: "#94a3b8" },
         ticks: {
-          color: "#94a3b8",
-          maxRotation: 45,
-          minRotation: 45,
-          // 데이터 포인트가 많을 경우 레이블 생략
+          color: "#6c757d", // var(--text-light)
+          maxRotation: 0,
+          minRotation: 0,
           autoSkip: true,
           maxTicksLimit: 10,
         },
-        grid: { color: "#334155" },
+        grid: {
+          display: false, // Hide grid lines
+        },
       },
     },
   };
 
   return (
     <div className="risk-chart-container">
-      <h3 className="chart-header">
-        실시간 위험도 추이 (Risk Score Over Time)
-      </h3>
       <div className="chart-area">
-        {/* 데이터가 없으면 차트 대신 메시지 표시 */}
         {data.length === 0 ? (
           <div className="chart-note">
             모니터링을 시작하면 실시간 위험도 그래프가 표시됩니다.

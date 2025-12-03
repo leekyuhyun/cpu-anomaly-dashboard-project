@@ -1,0 +1,17 @@
+.clock-container {
+  text-align: right;
+}
+
+.time-display {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.1;
+}
+
+.date-display {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}

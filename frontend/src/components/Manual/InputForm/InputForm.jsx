@@ -1,46 +1,48 @@
-import BaseInputs from "../BaseInputs/BaseInputs";
-import PCAFeatures from "../PCAFeatures/PCAFeatures";
-import {
-  sampleNormalTransaction,
-  sampleFraudTransaction,
-} from "../../../utils/constants";
+import InputGroup from "../../Common/InputGroup/InputGroup";
+import { V_FIELD_DESCRIPTIONS } from "../../../utils/constants";
 import "./InputForm.css";
 
-export default function InputForm({
-  formData,
-  onFormChange,
-  onTimeChange,
-  onAmountChange,
-  onLoadScenario, // 부모로부터 상태 업데이트 함수를 받습니다.
-}) {
+// This component is now a self-contained form for all 30 transaction features.
+export default function InputForm({ formData, onFormChange }) {
+  const V_FIELDS = Object.keys(V_FIELD_DESCRIPTIONS);
+
   return (
-    <form className="input-form" onSubmit={(e) => e.preventDefault()}>
-      <div className="form-header">
-        <h2>거래 정보 입력 (30 Features)</h2>
-        {/* --- 시나리오 로더 섹션 --- */}
-        <div className="scenario-loader">
-          <button
-            type="button"
-            onClick={() => onLoadScenario(sampleNormalTransaction)}
-            className="scenario-button normal"
-          >
-            정상 거래 불러오기
-          </button>
-          <button
-            type="button"
-            onClick={() => onLoadScenario(sampleFraudTransaction)}
-            className="scenario-button fraud"
-          >
-            사기 거래 불러오기
-          </button>
+    <form className="input-form-grid" onSubmit={(e) => e.preventDefault()}>
+      <div className="form-section">
+        <h3 className="form-section-title">기본 정보</h3>
+        <div className="base-inputs-grid">
+          <InputGroup
+            label="Time"
+            name="Time"
+            placeholder="Time"
+            value={formData.Time}
+            onChange={onFormChange}
+          />
+          <InputGroup
+            label="Amount"
+            name="Amount"
+            placeholder="Amount ($)"
+            value={formData.Amount}
+            onChange={onFormChange}
+          />
         </div>
       </div>
-      <BaseInputs
-        formData={formData}
-        onTimeChange={onTimeChange}
-        onAmountChange={onAmountChange}
-      />
-      <PCAFeatures formData={formData} onChange={onFormChange} />
+
+      <div className="form-section">
+        <h3 className="form-section-title">PCA 값 (V1 - V28)</h3>
+        <div className="pca-inputs-grid">
+          {V_FIELDS.map((name) => (
+            <InputGroup
+              key={name}
+              label={name}
+              name={name}
+              placeholder={name}
+              value={formData[name]}
+              onChange={onFormChange}
+            />
+          ))}
+        </div>
+      </div>
     </form>
   );
 }
