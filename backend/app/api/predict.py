@@ -126,13 +126,21 @@ def predict_transaction(input_data: TransactionInput, db: Session = Depends(get_
             details=f"V1={input_data.V1:.2f}, V2={input_data.V2:.2f}" # 샘플 로그
         )
         
-# 6. 프론트엔드에 결과 반환
+        # 6. 프론트엔드에 결과 반환
+        # [추가] 차트 시각화를 위한 주요 변수 값
+        key_features = {
+            "V14": input_data.V14,
+            "V10": input_data.V10,
+            "V4": input_data.V4,
+        }
+
         return {
             "prediction": status_label,
             # [수정] numpy.bool_ 타입을 bool()로 감싸서 파이썬 기본 타입으로 변환
             "is_fraud": bool(is_fraud), 
             "fraud_probability": float(fraud_probability),
-            "log_id": log_entry.id
+            "log_id": log_entry.id,
+            "key_features": key_features # 주요 변수 추가
         }
     
     except Exception as e:
