@@ -54,6 +54,12 @@ body {
   border: none;
 }
 
+.card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .monitor-btn {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;

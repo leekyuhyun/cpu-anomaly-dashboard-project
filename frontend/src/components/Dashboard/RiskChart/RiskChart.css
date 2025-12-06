@@ -1,14 +1,14 @@
-/* .risk-chart-container styling is now handled by the global .card class */
-.risk-chart-container {
-  /* Keep this class for semantic purposes, but without specific styling */
+.risk-chart-container h4 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--text-dark);
 }
 
 .chart-area {
-  height: 280px; /* Give the chart a fixed height */
+  height: 280px; 
   position: relative;
 }
 
-/* Data-empty message style for light mode */
 .chart-note {
   position: absolute;
   top: 50%;
@@ -17,9 +17,38 @@
   color: var(--text-light);
   font-size: 0.9rem;
   text-align: center;
-  padding: 1rem;
-  background-color: var(--background-color);
-  border-radius: var(--border-radius);
-  line-height: 1.5;
-  width: 80%;
+}
+
+/* Card Header Flex Layout */
+.card-header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Status Badge Styles */
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.status-badge.normal {
+  background-color: #e6f7f0;
+  border-color: #198754;
+  color: #198754;
+}
+
+.status-badge.fraud {
+  background-color: #fdeeee;
+  border-color: #dc3545;
+  color: #dc3545;
 }

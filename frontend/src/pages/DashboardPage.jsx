@@ -12,26 +12,31 @@ const DashboardPage = ({
   riskScore,
   isSimulating,
   onToggleSimulation,
-  // alertTransaction, // No longer used for TopMetrics
-  // onCloseStaticAlert, // No longer used for TopMetrics
+  highestRiskTransaction,
 }) => {
   const latestLog = simulationLog?.[0];
-  const topMetricsTitle = latestLog?.is_fraud
-    ? "주요 이상 거래 요소"
-    : "주요 영향 지표";
 
   return (
     <div className="dashboard-layout-grid">
       <div className="left-panel">
         <div className="card">
           <div className="card-header card-header-controls">
-            <h2>실시간 거래 분석</h2>
-            <button
-              onClick={onToggleSimulation}
-              className={`monitor-btn ${isSimulating ? "stop" : "start"}`}
-            >
-              {isSimulating ? "모니터링 중지" : "모니터링 시작"}
-            </button>
+            <div className="card-header-left">
+              <h2>실시간 거래 분석</h2>
+              <button
+                onClick={onToggleSimulation}
+                className={`monitor-btn ${isSimulating ? "stop" : "start"}`}
+              >
+                {isSimulating ? "모니터링 중지" : "모니터링 시작"}
+              </button>
+            </div>
+            <div className="header-actions">
+              {latestLog && (
+                <span className={`status-badge ${latestLog.is_fraud ? 'fraud' : 'normal'}`}>
+                  {latestLog.is_fraud ? '⚠️ 위험' : '✓ 정상'}
+                </span>
+              )}
+            </div>
           </div>
           <RiskChart data={riskChartData} />
         </div>
@@ -47,7 +52,7 @@ const DashboardPage = ({
         </div>
         <div className="card">
           {/* h2 is removed from here and passed into the component */}
-          <TopMetrics transaction={latestLog} title={topMetricsTitle} />
+          <TopMetrics highestRisk={highestRiskTransaction} />
         </div>
         <div className="card">
           <h2 className="card-header">SYSTEM INFO</h2>

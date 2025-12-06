@@ -41,16 +41,25 @@ export default function ResultBox({ result, error }) {
         </div>
         <div className="detail-item">
           <h5>주요 판단 근거</h5>
-          {top_features && top_features.length > 0 ? (
-            <div className="features-tags">
-              {top_features.map((feature, index) => (
-                <span key={index} className="feature-tag">
-                  {feature}
-                </span>
-              ))}
-            </div>
+          {result.explanation ? (
+            <>
+              <p>{result.explanation}</p>
+              {result.top_features && result.top_features.length > 0 && (
+                <div className="features-tags">
+                  {result.top_features.map((feature, index) => (
+                    <span key={index} className="feature-tag">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
-            <p>복합적인 요인을 통해 분석되었습니다.</p>
+            <p>
+              {is_fraud
+                ? "복합적인 요인을 통해 분석되었습니다."
+                : "정상 거래 패턴에 해당합니다."}
+            </p>
           )}
         </div>
       </div>

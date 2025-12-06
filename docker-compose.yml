@@ -36,6 +36,7 @@ services:
       - MODEL_PATH=/backend/model/fraud_detector_supervised.pkl
       - AMOUNT_SCALER_PATH=/backend/model/amount_scaler.pkl
       - TIME_SCALER_PATH=/backend/model/time_scaler.pkl
+      - STATS_PATH=/backend/model/feature_stats.pkl
     depends_on:
       - db
     restart: unless-stopped

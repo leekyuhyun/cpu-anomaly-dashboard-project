@@ -73,8 +73,8 @@
 /* Dashboard Grid Layout - To be refined when components are styled */
 .dashboard-layout-grid {
   display: grid;
-  grid-template-columns: 1fr 350px; /* Example: main content and a sidebar */
-  gap: 1.5rem;
+  grid-template-columns: 1fr 400px; /* Wider right panel */
+  gap: 2rem; /* Increased gap */
   width: 100%;
 }
 
@@ -85,7 +85,28 @@
   gap: 1.5rem;
 }
 
+/* --- New Layout Styles --- */
+
+.right-panel-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.card.card-top-metrics {
+  /* Make TopMetrics card more compact */
+  padding: 1rem; 
+}
+
+
 /* Responsive Layout */
+@media (max-width: 1200px) {
+  .dashboard-layout-grid {
+    grid-template-columns: 1fr 320px; /* Shrink right panel */
+  }
+}
+
+
 @media (max-width: 1024px) {
   .dashboard-layout-grid {
     grid-template-columns: 1fr; /* Stack columns on smaller screens */
@@ -101,5 +122,8 @@
     .nav-button {
         padding: 0.75rem;
         font-size: 0.9rem;
+    }
+    .right-panel-bottom-grid {
+      grid-template-columns: 1fr; /* Stack bottom cards on mobile */
     }
 }

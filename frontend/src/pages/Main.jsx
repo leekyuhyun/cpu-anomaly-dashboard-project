@@ -28,8 +28,11 @@ function Main() {
   const [simulationLog, setSimulationLog] = useState([]);
   const [riskScore, setRiskScore] = useState(0);
   const [alertTransaction, setAlertTransaction] = useState(null);
-  const [detailedLog, setDetailedLog] = useState(null); // 로그 상세 보기 모달용 상태
+  const [showDetailModal, setShowDetailModal] = useState(false); // 모달 표시 여부
+  const [modalLoading, setModalLoading] = useState(false); // 모달 내용 로딩
+  const [selectedLogAnalysis, setSelectedLogAnalysis] = useState(null); // 모달에 표시될 분석 결과
   const [riskChartData, setRiskChartData] = useState([]); // ✅ 차트 데이터 상태 추가
+  const [highestRiskTransaction, setHighestRiskTransaction] = useState(null); // 최고 위험도 거래
   const intervalRef = useRef(null);
   const transactionIndexRef = useRef(0);
 
@@ -56,8 +59,9 @@ function Main() {
   const startSimulation = () => {
     setIsSimulating(true);
     setSimulationLog([]);
-    setDetailedLog(null);
+    setShowDetailModal(false);
     setRiskChartData([]); // 시뮬레이션 시작 시 차트 데이터 초기화
+    setHighestRiskTransaction(null); // 최고 위험도 거래 초기화
     transactionIndexRef.current = 0;
 
     intervalRef.current = setInterval(async () => {
@@ -91,9 +95,15 @@ function Main() {
           return [...prevData, newEntry].slice(-50);
         });
 
-        // 4. 경고창 업데이트
+        // 4. 경고창 및 최고 위험도 거래 업데이트
         if (resultData.is_fraud) {
           setAlertTransaction(resultData);
+          setHighestRiskTransaction(prevHighest => {
+            if (!prevHighest || resultData.fraud_probability > prevHighest.fraud_probability) {
+                return resultData;
+            }
+            return prevHighest;
+          });
         }
       } else {
         console.error("Simulation API Error:", response.error);
@@ -117,12 +127,24 @@ function Main() {
     }
   };
 
-  const handleLogClick = (logEntry) => {
-    setDetailedLog(logEntry);
+  const handleLogClick = async (logEntry) => {
+    setSelectedLogAnalysis(null);
+    setModalLoading(true);
+    setShowDetailModal(true);
+    
+    const response = await makeAPIPrediction(logEntry);
+    if (response.success) {
+      setSelectedLogAnalysis(response.data);
+    } else {
+      // 모달 내에서 에러를 표시할 수 있도록 에러 상태 설정
+      setSelectedLogAnalysis({ error: response.error });
+    }
+    setModalLoading(false);
   };
 
   const handleCloseDetailModal = () => {
-    setDetailedLog(null);
+    setShowDetailModal(false);
+    setSelectedLogAnalysis(null);
   };
 
   const handleCloseStaticAlert = () => {
@@ -174,6 +196,7 @@ function Main() {
             riskScore={riskScore}
             alertTransaction={alertTransaction}
             onCloseStaticAlert={handleCloseStaticAlert}
+            highestRiskTransaction={highestRiskTransaction}
           />
         ) : (
           <ManualAnalysisPage
@@ -188,9 +211,10 @@ function Main() {
         )}
       </main>
 
-      {detailedLog && (
+      {showDetailModal && (
         <LogDetailModal
-          transaction={detailedLog}
+          loading={modalLoading}
+          result={selectedLogAnalysis}
           onClose={handleCloseDetailModal}
         />
       )}
