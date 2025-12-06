@@ -1,0 +1,129 @@
+.top-metrics-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Adjusted gap */
+  text-align: left; /* Ensure left alignment for all text */
+}
+
+.top-metrics-container .card-header {
+  margin-bottom: 0.25rem; /* Reduced margin */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* User request: small description text */
+.metrics-description {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: -0.75rem; /* Pull it closer to the header */
+  margin-bottom: 1rem;
+}
+
+.icon-spark {
+  color: #ff9800;
+  font-size: 1.2em;
+}
+
+.metrics-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.metric-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  width: 40px; 
+  flex-shrink: 0; /* Prevent the name from shrinking */
+}
+
+.metric-bar {
+  flex-grow: 1;
+  height: 24px; /* Adjusted height */
+  background-color: #e9ecef;
+  border-radius: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align text to the right */
+  overflow: hidden;
+}
+
+.metric-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #dbeafe;
+  border-radius: 6px 0 0 6px; /* Match rounding */
+}
+
+.metric-percent {
+  position: relative;
+  padding-right: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+/* Separator Line */
+.metric-separator {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0.25rem 0;
+}
+
+
+/* Highest Risk Transaction Section */
+.highest-risk-section {
+  margin-top: 0;
+}
+
+.highest-risk-title {
+  font-size: 0.9rem;
+  font-weight: 600; /* Bolder */
+  color: var(--text-dark); /* Darker text */
+  margin-bottom: 0.5rem;
+}
+
+.highest-risk-box {
+  border-radius: 6px;
+  padding: 0.5rem 1rem; /* Adjusted padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.highest-risk-box.fraud {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+}
+
+.highest-risk-box.normal {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: var(--text-light);
+  justify-content: center;
+}
+
+.highest-risk-box .timestamp {
+  font-size: 1rem; /* Adjusted font size */
+}
+
+.highest-risk-box .amount {
+  font-size: 1rem; /* Adjusted font size */
+}

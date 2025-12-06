@@ -1,18 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Header from "../components/Common/Header/Header";
-import InputForm from "../components/Manual/InputForm/InputForm";
-import PredictButton from "../components/Manual/PredictButton/PredictButton";
-import ResultBox from "../components/Manual/ResultBox/ResultBox";
+// import Header from "../components/Common/Header/Header"; // No longer used directly here
 import LoadingIndicator from "../components/Common/LoadingIndicator/LoadingIndicator";
-import DashboardControls from "../components/Dashboard/DashboardControls/DashboardControls";
-import RealtimeLog from "../components/Dashboard/RealtimeLog/RealtimeLog";
-import RiskGauge from "../components/Dashboard/RiskGauge/RiskGauge";
-import StaticFraudAlert from "../components/Dashboard/StaticFraudAlert/StaticFraudAlert";
-import SystemInfoBox from "../components/Dashboard/SystemInfoBox/SystemInfoBox";
 import LogDetailModal from "../components/Dashboard/LogDetailModal/LogDetailModal";
-import RiskChart from "../components/Dashboard/RiskChart/RiskChart";
+import DashboardPage from "./DashboardPage"; // Import new page component
+import ManualAnalysisPage from "./ManualAnalysisPage"; // Import new page component
+import Clock from "../components/Common/Clock/Clock"; // Import Clock
 import { initialFormData } from "../utils/constants";
 import { simulationDataLarge } from "../utils/simulationDataLarge";
 import { makeAPIPrediction } from "../utils/api";
@@ -23,7 +17,7 @@ function Main() {
   // --- 공통 상태 ---
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState("simulation"); // 'manual' vs 'simulation'
+  const [mode, setMode] = useState("simulation"); // 'simulation' vs 'manual'
 
   // --- 수동 분석 모드 상태 ---
   const [formData, setFormData] = useState(initialFormData);
@@ -34,8 +28,11 @@ function Main() {
   const [simulationLog, setSimulationLog] = useState([]);
   const [riskScore, setRiskScore] = useState(0);
   const [alertTransaction, setAlertTransaction] = useState(null);
-  const [detailedLog, setDetailedLog] = useState(null); // 로그 상세 보기 모달용 상태
+  const [showDetailModal, setShowDetailModal] = useState(false); // 모달 표시 여부
+  const [modalLoading, setModalLoading] = useState(false); // 모달 내용 로딩
+  const [selectedLogAnalysis, setSelectedLogAnalysis] = useState(null); // 모달에 표시될 분석 결과
   const [riskChartData, setRiskChartData] = useState([]); // ✅ 차트 데이터 상태 추가
+  const [highestRiskTransaction, setHighestRiskTransaction] = useState(null); // 최고 위험도 거래
   const intervalRef = useRef(null);
   const transactionIndexRef = useRef(0);
 
@@ -62,8 +59,9 @@ function Main() {
   const startSimulation = () => {
     setIsSimulating(true);
     setSimulationLog([]);
-    setDetailedLog(null);
+    setShowDetailModal(false);
     setRiskChartData([]); // 시뮬레이션 시작 시 차트 데이터 초기화
+    setHighestRiskTransaction(null); // 최고 위험도 거래 초기화
     transactionIndexRef.current = 0;
 
     intervalRef.current = setInterval(async () => {
@@ -72,7 +70,11 @@ function Main() {
       const response = await makeAPIPrediction(currentTransaction);
 
       if (response.success) {
-        const resultData = { ...response.data, ...currentTransaction };
+        const resultData = {
+          ...response.data,
+          ...currentTransaction,
+          timestamp: new Date(),
+        };
 
         // 1. 로그 업데이트 (최신 50개 유지)
         setSimulationLog((prevLog) => [resultData, ...prevLog].slice(0, 50));
@@ -87,14 +89,21 @@ function Main() {
             score: resultData.fraud_probability,
             // log_id를 부여하여 x축 레이블로 사용
             log_id: transactionIndexRef.current + 1,
+            key_features: resultData.key_features, // [추가] 주요 변수 추가
           };
           // 새로운 데이터를 뒤에 추가하고 배열을 슬라이스하여 최대 50개 유지
           return [...prevData, newEntry].slice(-50);
         });
 
-        // 4. 경고창 업데이트
+        // 4. 경고창 및 최고 위험도 거래 업데이트
         if (resultData.is_fraud) {
           setAlertTransaction(resultData);
+          setHighestRiskTransaction(prevHighest => {
+            if (!prevHighest || resultData.fraud_probability > prevHighest.fraud_probability) {
+                return resultData;
+            }
+            return prevHighest;
+          });
         }
       } else {
         console.error("Simulation API Error:", response.error);
@@ -118,12 +127,24 @@ function Main() {
     }
   };
 
-  const handleLogClick = (logEntry) => {
-    setDetailedLog(logEntry);
+  const handleLogClick = async (logEntry) => {
+    setSelectedLogAnalysis(null);
+    setModalLoading(true);
+    setShowDetailModal(true);
+    
+    const response = await makeAPIPrediction(logEntry);
+    if (response.success) {
+      setSelectedLogAnalysis(response.data);
+    } else {
+      // 모달 내에서 에러를 표시할 수 있도록 에러 상태 설정
+      setSelectedLogAnalysis({ error: response.error });
+    }
+    setModalLoading(false);
   };
 
   const handleCloseDetailModal = () => {
-    setDetailedLog(null);
+    setShowDetailModal(false);
+    setSelectedLogAnalysis(null);
   };
 
   const handleCloseStaticAlert = () => {
@@ -139,78 +160,66 @@ function Main() {
   }, []);
 
   return (
-    <div className="main">
-      <div className="main-container">
-        <Header />
-
-        <div className="mode-toggle">
-          <button
-            onClick={() => setMode("simulation")}
-            className={mode === "simulation" ? "active" : ""}
-          >
-            분석 대시보드
-          </button>
-          <button
-            onClick={() => setMode("manual")}
-            className={mode === "manual" ? "active" : ""}
-          >
-            수동 분석
-          </button>
+    // The new layout structure begins here.
+    <div className="app-container">
+      <header className="app-header">
+        <div>
+          <h1>신용카드 이상 거래 탐지 시스템</h1>
+          <p>30개 거래 피처를 이용한 실시간 사기 탐지</p>
         </div>
+        <Clock />
+      </header>
 
-        {mode === "simulation" && (
-          <div className="dashboard-view">
-            <DashboardControls
-              isSimulating={isSimulating}
-              onToggleSimulation={handleToggleSimulation}
-            />
+      <nav className="app-nav">
+        <button
+          onClick={() => setMode("simulation")}
+          className={`nav-button ${mode === "simulation" ? "active" : ""}`}
+        >
+          실시간 이상 거래 분석
+        </button>
+        <button
+          onClick={() => setMode("manual")}
+          className={`nav-button ${mode === "manual" ? "active" : ""}`}
+        >
+          수동 분석
+        </button>
+      </nav>
 
-            <div className="dashboard-layout-grid">
-              <div className="left-panel">
-                {/* ✅ RiskChart 컴포넌트 추가 및 데이터 전달 */}
-                <RiskChart data={riskChartData} />
-                <RealtimeLog log={simulationLog} onLogClick={handleLogClick} />
-              </div>
-
-              <div className="right-panel">
-                <RiskGauge score={riskScore} />
-
-                <StaticFraudAlert
-                  transaction={alertTransaction}
-                  onConfirm={handleCloseStaticAlert}
-                />
-
-                <SystemInfoBox />
-              </div>
-            </div>
-          </div>
-        )}
-        {mode === "manual" && (
-          <div className="manual-view">
-            <InputForm
-              formData={formData}
-              onFormChange={onFormChange}
-              onTimeChange={onFormChange}
-              onAmountChange={onFormChange}
-              onLoadScenario={handleLoadScenario}
-            />
-            <PredictButton onClick={onPredictClick} loading={loading} />
-            {loading && <LoadingIndicator />}
-            <ResultBox
-              result={manualResult}
-              error={error}
-              formData={formData}
-            />
-          </div>
-        )}
-
-        {detailedLog && (
-          <LogDetailModal
-            transaction={detailedLog}
-            onClose={handleCloseDetailModal}
+      <main className="app-main">
+        {mode === "simulation" ? (
+          <DashboardPage
+            isSimulating={isSimulating}
+            onToggleSimulation={handleToggleSimulation}
+            riskChartData={riskChartData}
+            simulationLog={simulationLog}
+            onLogClick={handleLogClick}
+            riskScore={riskScore}
+            alertTransaction={alertTransaction}
+            onCloseStaticAlert={handleCloseStaticAlert}
+            highestRiskTransaction={highestRiskTransaction}
+          />
+        ) : (
+          <ManualAnalysisPage
+            formData={formData}
+            onFormChange={onFormChange}
+            onLoadScenario={handleLoadScenario}
+            onPredictClick={onPredictClick}
+            loading={loading}
+            manualResult={manualResult}
+            error={error}
           />
         )}
-      </div>
+      </main>
+
+      {showDetailModal && (
+        <LogDetailModal
+          loading={modalLoading}
+          result={selectedLogAnalysis}
+          onClose={handleCloseDetailModal}
+        />
+      )}
+      {/* The top-level loading indicator might be needed if there are page-level loads.
+          For now, loading is handled inside ManualAnalysisPage. */}
     </div>
   );
 }
