@@ -85,6 +85,7 @@ function Main() {
             score: resultData.fraud_probability,
             // log_id를 부여하여 x축 레이블로 사용
             log_id: transactionIndexRef.current + 1,
+            key_features: resultData.key_features, // [추가] 주요 변수 추가
           };
           // 새로운 데이터를 뒤에 추가하고 배열을 슬라이스하여 최대 50개 유지
           return [...prevData, newEntry].slice(-50);
