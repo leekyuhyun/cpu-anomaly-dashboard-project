@@ -98,9 +98,12 @@ function Main() {
         // 4. 경고창 및 최고 위험도 거래 업데이트
         if (resultData.is_fraud) {
           setAlertTransaction(resultData);
-          setHighestRiskTransaction(prevHighest => {
-            if (!prevHighest || resultData.fraud_probability > prevHighest.fraud_probability) {
-                return resultData;
+          setHighestRiskTransaction((prevHighest) => {
+            if (
+              !prevHighest ||
+              resultData.fraud_probability > prevHighest.fraud_probability
+            ) {
+              return resultData;
             }
             return prevHighest;
           });
@@ -131,7 +134,7 @@ function Main() {
     setSelectedLogAnalysis(null);
     setModalLoading(true);
     setShowDetailModal(true);
-    
+
     const response = await makeAPIPrediction(logEntry);
     if (response.success) {
       setSelectedLogAnalysis(response.data);
@@ -175,13 +178,13 @@ function Main() {
           onClick={() => setMode("simulation")}
           className={`nav-button ${mode === "simulation" ? "active" : ""}`}
         >
-          실시간 이상 거래 분석
+          이상 거래 분석
         </button>
         <button
           onClick={() => setMode("manual")}
           className={`nav-button ${mode === "manual" ? "active" : ""}`}
         >
-          수동 분석
+          거래 데이터 입력/분석
         </button>
       </nav>
 

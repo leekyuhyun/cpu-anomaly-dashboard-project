@@ -22,7 +22,7 @@ const DashboardPage = ({
         <div className="card">
           <div className="card-header card-header-controls">
             <div className="card-header-left">
-              <h2>실시간 거래 분석</h2>
+              <h2>이상 거래 분석</h2>
               <button
                 onClick={onToggleSimulation}
                 className={`monitor-btn ${isSimulating ? "stop" : "start"}`}
@@ -32,8 +32,12 @@ const DashboardPage = ({
             </div>
             <div className="header-actions">
               {latestLog && (
-                <span className={`status-badge ${latestLog.is_fraud ? 'fraud' : 'normal'}`}>
-                  {latestLog.is_fraud ? '⚠️ 위험' : '✓ 정상'}
+                <span
+                  className={`status-badge ${
+                    latestLog.is_fraud ? "fraud" : "normal"
+                  }`}
+                >
+                  {latestLog.is_fraud ? "⚠️ 위험" : "✓ 정상"}
                 </span>
               )}
             </div>
